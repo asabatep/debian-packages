@@ -1,6 +1,6 @@
 # debian-packages
 
-The sources and documentation for the Debian packages available at repo.lol
+The sources and documentation for the Debian packages available at https://repo.lol/debian
 
 ## gtk3 with the filechooser patch and glib2 with tumbler patch
 This is Debian and Ubuntu gtk3 with [dudemanguy's filechooser icon view patch](https://gist.github.com/Dudemanguy/d199759b46a79782cc1b301649dec8a5), that adds an icon view with thumbnails, and libglib2 with the [glib thumbnailer patch](https://gist.github.com/Dudemanguy/d199759b46a79782cc1b301649dec8a5), that will generate the thumbnails themselves with tumbler.
