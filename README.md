@@ -34,7 +34,7 @@ Run ```apt-get update && apt-get upgrade```. The patched packages should replace
 ## python3-commandnotfound
 Debian build of Ubuntu's python3-commandnotfound (which mysteriously disappeared on the former). Built for Debian bullseye and sid.
 
-This adds apt support to thefuck on Debian.
+This adds apt support for [thefuck](https://github.com/nvbn/thefuck) on Debian.
 
 ### Installing
 Add repo and key (see previous instructions, don't create a preferences file for this one) and run ```apt install command-not-found python3-commandnotfound```.
