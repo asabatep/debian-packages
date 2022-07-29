@@ -50,3 +50,14 @@ Add repo and key (see previous instructions, don't create a preferences file for
 You can easily build your own version of the patched packages by cloning this repo and running ```make``` in the respective directory. The resulting files will be in the ```output/$RELEASE``` directory.
 
 Docker (or podman-docker) and make are the only needed dependencies needed on the host, as the build will take place on an isolated container and everything else will be handled automatically.
+
+## Convenient one-liners
+```
+# Add the repo
+echo deb [signed-by=/usr/share/keyrings/repo.lol.gpg] http://repo.lol/debian $(lsb_release -cs) main | sudo tee /etc/apt/sources.list.d/repo.lol.list && sudo wget -O /usr/share/keyrings/repo.lol.gpg https://repo.lol/debian/keyring.gpg
+```
+
+```
+# Generate the preferences file for the GTK patch
+echo -ne "Package: $(apt-cache showsrc glib2.0 gtk+3.0|grep " deb "|awk '{print $1}' | xargs)\nPin: origin repo.lol\nPin-Priority: 800\n" | sudo tee /etc/apt/preferences.d/10-gtk-filechooser-patch
+```
