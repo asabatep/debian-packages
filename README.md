@@ -5,7 +5,7 @@ The sources and documentation for the Debian packages available at https://repo.
 ## gtk3 with the filechooser patch and glib2 with tumbler patch
 This is Debian and Ubuntu gtk3 with [dudemanguy's filechooser icon view patch](https://gist.github.com/Dudemanguy/d199759b46a79782cc1b301649dec8a5), that adds an icon view with thumbnails, and libglib2 with the [glib thumbnailer patch](https://gist.github.com/Dudemanguy/d199759b46a79782cc1b301649dec8a5), that will generate the thumbnails themselves with tumbler.
 
-This package is built for Debian Bullseye and Sid, and for Ubuntu Jammy.
+This package is built for Debian Bullseye, Bookworm and Sid, and for Ubuntu Jammy.
 
 ### Installing
 
@@ -32,7 +32,7 @@ wget -O /usr/share/keyrings/repo.lol.gpg https://repo.lol/debian/keyring.gpg
 Run ```apt-get update && apt-get upgrade```. The patched packages should replace the stock ones.
 
 ## python3-commandnotfound
-Debian build of Ubuntu's python3-commandnotfound (which mysteriously disappeared on the former). Built for Debian bullseye and sid.
+Debian build of Ubuntu's python3-commandnotfound (which mysteriously disappeared on the former). Built for Debian Bullseye, Bookworm, and Sid.
 
 This adds apt support for [thefuck](https://github.com/nvbn/thefuck) on Debian.
 
