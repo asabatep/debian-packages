@@ -31,7 +31,15 @@ wget -O /usr/share/keyrings/repo.lol.gpg https://repo.lol/debian/keyring.gpg
 
 Run ```apt-get update && apt-get upgrade```. The patched packages should replace the stock ones.
 
-### Building
+## python3-commandnotfound
+Debian build of Ubuntu's python3-commandnotfound (which mysteriously disappeared on the former). Built for Debian bullseye and sid.
+
+This adds apt support to thefuck on Debian.
+
+### Installing
+Add repo and key (see previous instructions, don't create a preferences file for this one) and run ```apt install command-not-found python3-commandnotfound```.
+
+## Building
 
 You can easily build your own version of the patched packages by cloning this repo and running ```make``` in the respective directory. The resulting files will be in the ```output/$RELEASE``` directory.
 
