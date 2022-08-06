@@ -6,3 +6,6 @@ command-not-found/output/
 command-not-found/work/
 globalprotect-openconnect/output/
 globalprotect-openconnect/work/
+hadolint/output/
+hadolint/work/
+hadolint/debian/hadolint/

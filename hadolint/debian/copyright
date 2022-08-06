@@ -1,0 +1,7 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: hadolint
+Upstream-Contact: https://github.com/hadolint/hadolint/issues 
+Source: https://github.com/hadolint/hadolint
+
+Files: *
+License: GPL-3

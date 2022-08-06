@@ -45,6 +45,12 @@ Debian build of [yuezk's globalprotect-openconnect VPN client](https://github.co
 ### Installing
 Add repo and key (see previous instructions, don't create a preferences file for this one) and run ```apt install globalprotect-openconnect```.
 
+## hadolint
+[Hadolint](https://github.com/hadolint/hadolint), a linter for Dockerfiles
+
+### Installing
+Add repo and key (see previous instructions, don't create a preferences file for this one) and run ```apt install globalprotect-openconnect```.
+
 ## Building
 
 You can easily build your own version of the patched packages by cloning this repo and running ```make``` in the respective directory. The resulting files will be in the ```output/$RELEASE``` directory.
