@@ -11,7 +11,7 @@ installpub:
 build:
 	mkdir -p output work
 	docker run --rm \
-		-v /etc/localtime:/etc/localtime:ro \
+		-e TZ=Etc/UTC \
 		-v $$(pwd)/debian:/contrib/debian \
 		-v $$(pwd)/output:/output \
 		-v $$(pwd)/build.sh:/build.sh \

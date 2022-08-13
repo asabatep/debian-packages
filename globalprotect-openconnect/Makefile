@@ -18,7 +18,7 @@ installpub:
 build:
 	mkdir -p output src work
 	docker run --rm \
-		-v /etc/localtime:/etc/localtime:ro \
+		-e TZ=Etc/UTC \
 		-v $$(pwd)/src:/src \
 		-v $$(pwd)/output:/output \
 		-v $$(pwd)/build.sh:/build.sh \
