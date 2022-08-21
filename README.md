@@ -49,7 +49,7 @@ Add repo and key (see previous instructions, don't create a preferences file for
 [Hadolint](https://github.com/hadolint/hadolint), a linter for Dockerfiles
 
 ### Installing
-Add repo and key (see previous instructions, don't create a preferences file for this one) and run ```apt install globalprotect-openconnect```.
+Add repo and key (see previous instructions, don't create a preferences file for this one) and run ```apt install hadolint```.
 
 ## Building
 
