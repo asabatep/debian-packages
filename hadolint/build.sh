@@ -1,6 +1,6 @@
 #!/bin/bash
 export LANG=C.UTF-8
-
+export DEBIAN_FRONTEND=noninteractive
 [ -z $VER ] && exit 1
 
 apt-get -y update

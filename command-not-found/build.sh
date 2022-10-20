@@ -1,6 +1,6 @@
-#!/bin/bash 
+#!/bin/bash
 set -ex
-
+export DEBIAN_FRONTEND=noninteractive
 mkdir -p /work/$RELEASE
 
 if grep -qi ubuntu /etc/os-release ; then 
