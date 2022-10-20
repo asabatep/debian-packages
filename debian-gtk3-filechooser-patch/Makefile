@@ -1,4 +1,4 @@
-all: bullseye bookworm sid jammy installpub
+all: bullseye bookworm sid jammy kinetic installpub
 
 bullseye:
 	DISTRO=debian RELEASE=bullseye make build
