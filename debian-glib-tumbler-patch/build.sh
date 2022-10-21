@@ -21,8 +21,11 @@ apt-get source glib2.0
 
 cd $(find . -maxdepth 1 -mindepth 1 -type d)
 
-quilt import -P glib-thumbnailer.patch  /src/glib-thumbnailer.patch
-quilt push
+quilt pop -a
+sed -i '/glocalfileinfo-Add-support-for-xx-large-and-x-large-thumb.patch/d' debian/patches/series
+sed -i '/gio-tests-Add-file-thumbnail-tests.patch/d' debian/patches/series
+quilt import -P glib-thumbnailer.patch /src/glib-thumbnailer.patch
+quilt push -a
 
 if grep -qi ubuntu /etc/os-release ; then
     echo "override_dh_builddeb:" >> debian/rules
