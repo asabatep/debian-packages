@@ -1,0 +1,92 @@
+Temporally disables conflicting commits.
+Don't get rid of file-thumbnail.c, we can just disable the test.
+
+diff --git a/gio/glocalfileinfo.c b/gio/glocalfileinfo.c
+index b2a497a44..ecbc629c6 100644
+--- a/gio/glocalfileinfo.c
++++ b/gio/glocalfileinfo.c
+@@ -1426,10 +1426,8 @@ get_thumbnail_attributes (const char     *path,
+ {
+   GChecksum *checksum;
+   char *uri;
+-  char *filename = NULL;
++  char *filename;
+   char *basename;
+-  const char *size_dirs[4] = { "xx-large", "x-large", "large", "normal" };
+-  gsize i;
+ 
+   uri = g_filename_to_uri (path, NULL, NULL);
+ 
+@@ -1439,18 +1437,11 @@ get_thumbnail_attributes (const char     *path,
+   basename = g_strconcat (g_checksum_get_string (checksum), ".png", NULL);
+   g_checksum_free (checksum);
+ 
+-  for (i = 0; i < G_N_ELEMENTS (size_dirs); i++)
+-    {
+-      filename = g_build_filename (g_get_user_cache_dir (),
+-                                   "thumbnails", size_dirs[i], basename,
+-                                   NULL);
+-      if (g_file_test (filename, G_FILE_TEST_IS_REGULAR))
+-        break;
++  filename = g_build_filename (g_get_user_cache_dir (),
++                               "thumbnails", "large", basename,
++                               NULL);
+ 
+-      g_clear_pointer (&filename, g_free);
+-    }
+-
+-  if (filename)
++  if (g_file_test (filename, G_FILE_TEST_IS_REGULAR))
+     {
+       _g_file_info_set_attribute_byte_string_by_id (info, G_FILE_ATTRIBUTE_ID_THUMBNAIL_PATH, filename);
+       _g_file_info_set_attribute_boolean_by_id (info, G_FILE_ATTRIBUTE_ID_THUMBNAIL_IS_VALID,
+@@ -1458,18 +1449,33 @@ get_thumbnail_attributes (const char     *path,
+     }
+   else
+     {
++      g_free (filename);
+       filename = g_build_filename (g_get_user_cache_dir (),
+-                                   "thumbnails", "fail",
+-                                   "gnome-thumbnail-factory",
+-                                   basename,
++                                   "thumbnails", "normal", basename,
+                                    NULL);
+ 
+       if (g_file_test (filename, G_FILE_TEST_IS_REGULAR))
+         {
+-          _g_file_info_set_attribute_boolean_by_id (info, G_FILE_ATTRIBUTE_ID_THUMBNAILING_FAILED, TRUE);
++          _g_file_info_set_attribute_byte_string_by_id (info, G_FILE_ATTRIBUTE_ID_THUMBNAIL_PATH, filename);
+           _g_file_info_set_attribute_boolean_by_id (info, G_FILE_ATTRIBUTE_ID_THUMBNAIL_IS_VALID,
+                                                     thumbnail_verify (filename, uri, stat_buf));
+         }
++      else
++        {
++          g_free (filename);
++          filename = g_build_filename (g_get_user_cache_dir (),
++                                       "thumbnails", "fail",
++                                       "gnome-thumbnail-factory",
++                                       basename,
++                                       NULL);
++
++          if (g_file_test (filename, G_FILE_TEST_IS_REGULAR))
++            {
++              _g_file_info_set_attribute_boolean_by_id (info, G_FILE_ATTRIBUTE_ID_THUMBNAILING_FAILED, TRUE);
++              _g_file_info_set_attribute_boolean_by_id (info, G_FILE_ATTRIBUTE_ID_THUMBNAIL_IS_VALID,
++                                                        thumbnail_verify (filename, uri, stat_buf));
++            }
++        }
+     }
+   g_free (basename);
+   g_free (filename);
+diff --git a/gio/tests/meson.build b/gio/tests/meson.build
+index 9053e90bd..8213599fa 100644
+--- a/gio/tests/meson.build
++++ b/gio/tests/meson.build
+@@ -61,7 +61,6 @@ gio_tests = {
+   'data-input-stream' : {},
+   'data-output-stream' : {},
+   'error': {},
+-  'file-thumbnail' : {},
+   'fileattributematcher' : {},
+   'filter-streams' : {},
+   'giomodule' : {

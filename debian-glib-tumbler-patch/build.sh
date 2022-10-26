@@ -24,7 +24,11 @@ cd $(find . -maxdepth 1 -mindepth 1 -type d)
 quilt pop -a
 sed -i '/glocalfileinfo-Add-support-for-xx-large-and-x-large-thumb.patch/d' debian/patches/series
 sed -i '/gio-tests-Add-file-thumbnail-tests.patch/d' debian/patches/series
+
 quilt import -P glib-thumbnailer.patch /src/glib-thumbnailer.patch
+if [ $RELEASE = "sid" ] ; then
+    quilt import -P 000-revert-e7a68531.patch /src/000-revert-e7a68531.patch
+fi
 quilt push -a
 
 if grep -qi ubuntu /etc/os-release ; then
