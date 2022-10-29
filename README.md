@@ -51,6 +51,23 @@ Add repo and key (see previous instructions, don't create a preferences file for
 ### Installing
 Add repo and key (see previous instructions, don't create a preferences file for this one) and run ```apt install hadolint```.
 
+## debian's dpkg with zstd support
+This is debian's dpkg, with support for zstd compression added [by backporting it from Ubuntu](https://patches.ubuntu.com/d/dpkg/dpkg_1.21.9ubuntu1.patch).
+
+This makes it possible to deal with Ubuntu packages in Debian systems, as Ubuntu switched to ztsd compression, such as when building Ubuntu debootstraps on Debian, managing repos, importing packages and similar operations.
+
+### Installing
+Add repo and key (see previous instructions) and run ```apt update```.
+
+While this dpkg build is known to work fine and I use it on all my systems, as dpkg is a rather important part of any Debian system, I would recommend using it only on systems where you will be working with packages. You might want to create a preferences file to prevent apt from installing it should you be using other packages from this repo (replace deb.debian.org with your Debian mirror if you're using a different one):
+
+*/etc/apt/preferences.d/20-dpkg*
+```
+Package: dpkg-dbgsym dpkg-dev dpkg dselect-dbgsym dselect libdpkg-dev libdpkg-perl
+Pin: origin deb.debian.org
+Pin-Priority: 800
+```
+
 ## Building
 
 You can easily build your own version of the patched packages by cloning this repo and running ```make``` in the respective directory. The resulting files will be in the ```output/$RELEASE``` directory.

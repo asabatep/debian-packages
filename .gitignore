@@ -9,3 +9,5 @@ globalprotect-openconnect/work/
 hadolint/output/
 hadolint/work/
 hadolint/debian/hadolint/
+dpkg-zstd/output/
+dpkg-zstd/work/

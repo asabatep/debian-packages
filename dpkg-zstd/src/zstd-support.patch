@@ -1,0 +1,1263 @@
+diff -pruN a/config.h.in b/config.h.in
+--- a/config.h.in	2022-07-01 09:25:58.000000000 +0000
++++ b/config.h.in	2022-07-01 15:15:53.000000000 +0000
+@@ -475,6 +475,9 @@
+ /* Define to 1 to use z library rather than console tool */
+ #undef WITH_LIBZ
+ 
++/* Define to 1 to use zstd library rather than console tool */
++#undef WITH_LIBZSTD
++
+ /* Define to 1 to use z-ng library rather than console tool */
+ #undef WITH_LIBZ_NG
+ 
+diff -pruN a/configure b/configure
+--- a/configure	2022-07-01 09:25:58.000000000 +0000
++++ b/configure	2022-07-01 15:15:53.000000000 +0000
+@@ -767,6 +767,7 @@ PKG_CONFIG_PATH
+ PKG_CONFIG
+ LZMA_LIBS
+ BZ2_LIBS
++ZSTD_LIBS
+ Z_NG_LIBS
+ Z_LIBS
+ HAVE_LIBMD_MD5_FALSE
+@@ -995,6 +996,7 @@ enable_largefile
+ with_libmd
+ with_libz
+ with_libz_ng
++with_libzstd
+ with_libbz2
+ with_liblzma
+ with_libselinux
+@@ -1028,6 +1030,7 @@ POD2MAN
+ MD_LIBS
+ Z_LIBS
+ Z_NG_LIBS
++ZSTD_LIBS
+ BZ2_LIBS
+ LZMA_LIBS
+ PKG_CONFIG
+@@ -1728,6 +1731,7 @@ Optional Packages:
+   --with-libmd            use libmd library for message digest functions
+   --with-libz             use z library for compression and decompression
+   --with-libz-ng          use z-ng library for compression and decompression
++  --with-libzstd          use zstd library for compression and decompression
+   --with-libbz2           use bz2 library for compression and decompression
+   --with-liblzma          use lzma library for compression and decompression
+   --with-libselinux       use selinux library to set security contexts
+@@ -1755,6 +1759,7 @@ Some influential environment variables:
+   MD_LIBS     linker flags for md library
+   Z_LIBS      linker flags for z library
+   Z_NG_LIBS   linker flags for z-ng library
++  ZSTD_LIBS   linker flags for zstd library
+   BZ2_LIBS    linker flags for bz2 library
+   LZMA_LIBS   linker flags for lzma library
+   PKG_CONFIG  path to pkg-config utility
+@@ -17472,11 +17477,11 @@ if test ${with_dpkg_deb_compressor+y}
+ then :
+   withval=$with_dpkg_deb_compressor; with_dpkg_deb_compressor=$withval
+ else $as_nop
+-  with_dpkg_deb_compressor=xz
++  with_dpkg_deb_compressor=zstd
+ fi
+ 
+   case $with_dpkg_deb_compressor in #(
+-  gzip|xz) :
++  gzip|xz|zstd) :
+     : ;; #(
+   *) :
+     as_fn_error $? "unsupported default compressor $with_dpkg_deb_compressor" "$LINENO" 5 ;;
+@@ -23783,6 +23788,112 @@ printf "%s\n" "#define USE_LIBZ_IMPL $us
+ 
+ 
+ 
++# Check whether --with-libzstd was given.
++if test ${with_libzstd+y}
++then :
++  withval=$with_libzstd;
++else $as_nop
++  with_libzstd=check
++fi
++
++  have_libzstd="no"
++  if test "x$with_libzstd" != "xno"
++then :
++
++    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for ZSTD_decompressStream in -lzstd" >&5
++printf %s "checking for ZSTD_decompressStream in -lzstd... " >&6; }
++if test ${ac_cv_lib_zstd_ZSTD_decompressStream+y}
++then :
++  printf %s "(cached) " >&6
++else $as_nop
++  ac_check_lib_save_LIBS=$LIBS
++LIBS="-lzstd  $LIBS"
++cat confdefs.h - <<_ACEOF >conftest.$ac_ext
++/* end confdefs.h.  */
++
++/* Override any GCC internal prototype to avoid an error.
++   Use char because int might match the return type of a GCC
++   builtin and then its argument prototype would still apply.  */
++char ZSTD_decompressStream ();
++int
++main (void)
++{
++return ZSTD_decompressStream ();
++  ;
++  return 0;
++}
++_ACEOF
++if ac_fn_c_try_link "$LINENO"
++then :
++  ac_cv_lib_zstd_ZSTD_decompressStream=yes
++else $as_nop
++  ac_cv_lib_zstd_ZSTD_decompressStream=no
++fi
++rm -f core conftest.err conftest.$ac_objext conftest.beam \
++    conftest$ac_exeext conftest.$ac_ext
++LIBS=$ac_check_lib_save_LIBS
++fi
++{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_zstd_ZSTD_decompressStream" >&5
++printf "%s\n" "$ac_cv_lib_zstd_ZSTD_decompressStream" >&6; }
++if test "x$ac_cv_lib_zstd_ZSTD_decompressStream" = xyes
++then :
++
++      ac_fn_c_check_header_compile "$LINENO" "zstd.h" "ac_cv_header_zstd_h" "$ac_includes_default"
++if test "x$ac_cv_header_zstd_h" = xyes
++then :
++
++        have_libzstd="yes"
++
++fi
++
++
++fi
++
++
++    if test "x$with_libzstd" != "xno"
++then :
++
++      if test "x$have_libzstd" = "xyes"
++then :
++
++
++printf "%s\n" "#define WITH_LIBZSTD 1" >>confdefs.h
++
++        if test "x$with_libzstd" = "xstatic"
++then :
++
++          dpkg_zstd_libs="-Wl,-Bstatic -lzstd -Wl,-Bdynamic"
++
++else $as_nop
++
++          dpkg_zstd_libs="-lzstd"
++
++fi
++        ZSTD_LIBS="${ZSTD_LIBS:+$ZSTD_LIBS }$dpkg_zstd_libs"
++
++else $as_nop
++
++        if test "x$with_libzstd" != "xcheck"
++then :
++
++          { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
++printf "%s\n" "$as_me: error: in \`$ac_pwd':" >&2;}
++as_fn_error $? "libzstd library or header not found
++See \`config.log' for more details" "$LINENO" 5; }
++
++fi
++
++fi
++
++fi
++
++fi
++
++
++
++
++
++
+ # Check whether --with-libbz2 was given.
+ if test ${with_libbz2+y}
+ then :
+@@ -32755,6 +32866,7 @@ Configuration:
+     libkvm  . . . . . . . . . . . : ${have_libkvm:-no}
+     libselinux  . . . . . . . . . : $have_libselinux
+     libmd . . . . . . . . . . . . : $have_libmd
++    libzstd  . . . . . . . . . .  : $have_libzstd
+     libz  . . . . . . . . . . . . : $have_libz_impl
+     liblzma . . . . . . . . . . . : $have_liblzma
+     libbz2  . . . . . . . . . . . : $have_libbz2
+diff -pruN a/configure.ac b/configure.ac
+--- a/configure.ac	2022-06-30 04:12:20.000000000 +0000
++++ b/configure.ac	2022-07-01 15:15:53.000000000 +0000
+@@ -95,6 +95,7 @@ AC_SYS_LARGEFILE
+ # Checks for libraries.
+ DPKG_LIB_MD
+ DPKG_LIB_Z
++DPKG_LIB_ZSTD
+ DPKG_LIB_BZ2
+ DPKG_LIB_LZMA
+ DPKG_LIB_SELINUX
+@@ -285,6 +286,7 @@ Configuration:
+     libkvm  . . . . . . . . . . . : ${have_libkvm:-no}
+     libselinux  . . . . . . . . . : $have_libselinux
+     libmd . . . . . . . . . . . . : $have_libmd
++    libzstd  . . . . . . . . . .  : $have_libzstd
+     libz  . . . . . . . . . . . . : $have_libz_impl
+     liblzma . . . . . . . . . . . : $have_liblzma
+     libbz2  . . . . . . . . . . . : $have_libbz2
+diff -pruN a/debian/control b/debian/control
+--- a/debian/control	2022-06-30 04:12:20.000000000 +0000
++++ b/debian/control	2022-07-01 15:16:10.000000000 +0000
+@@ -16,7 +16,9 @@ Build-Depends:
+ # Needed for --porefs defaults, conditional addenda and mode=eof.
+  po4a (>= 0.59),
+  zlib1g-dev,
++ zstd,
+  libbz2-dev,
++ libzstd-dev,
+  liblzma-dev,
+  libselinux1-dev [linux-any],
+  libncurses-dev (>= 6.1+20180210) | libncursesw5-dev,
+@@ -56,6 +58,7 @@ Multi-Arch: same
+ Depends:
+  ${misc:Depends},
+  zlib1g-dev,
++ libzstd-dev,
+  liblzma-dev,
+  libbz2-dev,
+ Description: Debian package management static library
+@@ -82,6 +85,7 @@ Depends:
+  patch (>= 2.7),
+  make,
+  binutils,
++ lto-disabled-list,
+ Recommends:
+  build-essential,
+  gcc | c-compiler,
+diff -pruN a/debian/rules b/debian/rules
+--- a/debian/rules	2022-06-30 04:12:20.000000000 +0000
++++ b/debian/rules	2022-07-01 15:16:10.000000000 +0000
+@@ -52,6 +52,7 @@ override_dh_auto_configure:
+ 		--with-devlibdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
+ 		--without-libmd \
+ 		--with-libz \
++		--with-libzstd \
+ 		--with-liblzma \
+ 		--with-libbz2 \
+ 		# EOL
+@@ -80,3 +81,10 @@ override_dh_installchangelogs:
+ 
+ override_dh_bugfiles:
+ 	dh_bugfiles -A
++
++override_dh_builddeb:
++	# Make debootstrap life easier on non-Debian based systems by
++	# compressing dpkg.deb with xz instead of zstd.
++	dh_builddeb -pdpkg -- -Zxz
++	dh_builddeb -a -Ndpkg
++	dh_builddeb
+diff -pruN a/dselect/Makefile.in b/dselect/Makefile.in
+--- a/dselect/Makefile.in	2022-07-01 09:25:58.000000000 +0000
++++ b/dselect/Makefile.in	2022-07-01 15:16:13.000000000 +0000
+@@ -388,6 +388,7 @@ VERSION = @VERSION@
+ XGETTEXT = @XGETTEXT@
+ XGETTEXT_015 = @XGETTEXT_015@
+ XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
++ZSTD_LIBS = @ZSTD_LIBS@
+ Z_LIBS = @Z_LIBS@
+ Z_NG_LIBS = @Z_NG_LIBS@
+ abs_builddir = @abs_builddir@
+diff -pruN a/dselect/methods/Makefile.in b/dselect/methods/Makefile.in
+--- a/dselect/methods/Makefile.in	2022-07-01 09:25:58.000000000 +0000
++++ b/dselect/methods/Makefile.in	2022-07-01 15:16:14.000000000 +0000
+@@ -301,6 +301,7 @@ VERSION = @VERSION@
+ XGETTEXT = @XGETTEXT@
+ XGETTEXT_015 = @XGETTEXT_015@
+ XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
++ZSTD_LIBS = @ZSTD_LIBS@
+ Z_LIBS = @Z_LIBS@
+ Z_NG_LIBS = @Z_NG_LIBS@
+ abs_builddir = @abs_builddir@
+diff -pruN a/lib/compat/Makefile.in b/lib/compat/Makefile.in
+--- a/lib/compat/Makefile.in	2022-07-01 09:25:58.000000000 +0000
++++ b/lib/compat/Makefile.in	2022-07-01 15:16:13.000000000 +0000
+@@ -386,6 +386,7 @@ VERSION = @VERSION@
+ XGETTEXT = @XGETTEXT@
+ XGETTEXT_015 = @XGETTEXT_015@
+ XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
++ZSTD_LIBS = @ZSTD_LIBS@
+ Z_LIBS = @Z_LIBS@
+ Z_NG_LIBS = @Z_NG_LIBS@
+ abs_builddir = @abs_builddir@
+diff -pruN a/lib/dpkg/compress.c b/lib/dpkg/compress.c
+--- a/lib/dpkg/compress.c	2022-07-01 02:44:27.000000000 +0000
++++ b/lib/dpkg/compress.c	2022-07-01 15:16:12.000000000 +0000
+@@ -36,6 +36,9 @@
+ #if USE_LIBZ_IMPL != USE_LIBZ_IMPL_NONE
+ #include <compat-zlib.h>
+ #endif
++#ifdef WITH_LIBZSTD
++#include <zstd.h>
++#endif
+ #ifdef WITH_LIBLZMA
+ #include <lzma.h>
+ #endif
+@@ -52,6 +55,7 @@
+ #include <dpkg/command.h>
+ #include <dpkg/compress.h>
+ #if USE_LIBZ_IMPL == USE_LIBZ_IMPL_NONE || \
++    !defined(WITH_LIBZSTD) || \
+     !defined(WITH_LIBLZMA) || \
+     !defined(WITH_LIBBZ2)
+ #include <dpkg/subproc.h>
+@@ -995,6 +999,161 @@ static const struct compressor compresso
+ };
+ 
+ /*
++ * Zstd compressor.
++ */
++
++#define ZSTD		"zstd"
++
++#ifdef WITH_LIBZSTD
++
++static void
++decompress_zstd(struct compress_params *params, int fd_in, int fd_out,
++                 const char *desc)
++{
++	size_t const buf_in_size = ZSTD_DStreamInSize();
++	void*  const buf_in = m_malloc(buf_in_size);
++	size_t const buf_out_size = ZSTD_DStreamOutSize();
++	void*  const buf_out = m_malloc(buf_out_size);
++	size_t init_result, just_read, to_read;
++	ZSTD_DStream* const dstream = ZSTD_createDStream();
++	if (dstream == NULL) {
++		ohshit(_("ZSTD_createDStream error creating stream"));
++	}
++
++	init_result = ZSTD_initDStream(dstream);
++	if (ZSTD_isError(init_result)) {
++		ohshit(_("ZSTD_initDStream error : %s"), ZSTD_getErrorName(init_result));
++	}
++	to_read = init_result;
++	while ((just_read = fd_read(fd_in, buf_in, to_read))) {
++		ZSTD_inBuffer input = { buf_in, just_read, 0 };
++		while (input.pos < input.size) {
++			size_t actualwrite;
++			ZSTD_outBuffer output = { buf_out, buf_out_size, 0 };
++			to_read = ZSTD_decompressStream(dstream, &output , &input);
++			if (ZSTD_isError(to_read)) {
++				ohshit(_("ZSTD_decompressStream error : %s \n"),
++				       ZSTD_getErrorName(to_read));
++			}
++			actualwrite = fd_write(fd_out, output.dst, output.pos);
++			if (actualwrite != output.pos) {
++				const char *errmsg = strerror(errno);
++				ohshite(_("%s: internal zstd write error: '%s'"), desc, errmsg);
++			}
++			/* possible next frame */
++			if (to_read == 0) {
++				init_result = ZSTD_initDStream(dstream);
++				if (ZSTD_isError(init_result)) {
++					ohshit(_("ZSTD_initDStream error : %s"), ZSTD_getErrorName(init_result));
++				}
++				to_read = init_result;
++			}
++		}
++	}
++
++	ZSTD_freeDStream(dstream);
++	free(buf_in);
++	free(buf_out);
++	if (close(fd_out))
++		ohshite(_("%s: internal zstd write error"), desc);
++}
++
++static void
++compress_zstd(struct compress_params *params, int fd_in, int fd_out,
++               const char *desc)
++{
++	size_t const buf_in_size = ZSTD_CStreamInSize();
++	void*  const buf_in = m_malloc(buf_in_size);
++	size_t const buf_out_size = ZSTD_CStreamOutSize();
++	void*  const buf_out = m_malloc(buf_out_size);
++	size_t init_result, end_res;
++	size_t just_read, to_read;
++	ZSTD_CStream* const cstream = ZSTD_createCStream();
++	if (cstream == NULL) {
++		ohshit(_("ZSTD_createCStream error"));
++	}
++
++	init_result = ZSTD_initCStream(cstream, params->level);
++	if (ZSTD_isError(init_result)) {
++		ohshit(_("ZSTD_initCStream error : %s"), ZSTD_getErrorName(init_result));
++	}
++	to_read = buf_in_size;
++	while ((just_read = fd_read(fd_in, buf_in, to_read))) {
++		ZSTD_inBuffer input = { buf_in, just_read, 0 };
++		while (input.pos < input.size) {
++			size_t actualwrite;
++			ZSTD_outBuffer output = { buf_out, buf_out_size, 0 };
++			to_read = ZSTD_compressStream(cstream, &output , &input);
++			if (ZSTD_isError(to_read)) {
++				ohshit(_("ZSTD_decompressStream error : %s \n"),
++				       ZSTD_getErrorName(to_read));
++			}
++			actualwrite = fd_write(fd_out, output.dst, output.pos);
++			if (actualwrite != output.pos) {
++				const char *errmsg = strerror(errno);
++				ohshite(_("%s: internal zstd write error: '%s'"),
++					desc, errmsg);
++			}
++		}
++	}
++	do {
++		size_t actualwrite;
++		ZSTD_outBuffer output = { buf_out, buf_out_size, 0 };
++		end_res = ZSTD_endStream(cstream, &output);
++		if (ZSTD_isError(end_res)) {
++			ohshit(_("ZSTD_endStream error : %s \n"),
++			       ZSTD_getErrorName(end_res));
++		}
++		actualwrite = fd_write(fd_out, output.dst, output.pos);
++		if (actualwrite != output.pos) {
++			const char *errmsg = strerror(errno);
++			ohshite(_("%s: internal zstd write error: '%s'"), desc,
++				errmsg);
++		}
++	} while (end_res > 0);
++
++	ZSTD_freeCStream(cstream);
++	free(buf_in);
++	free(buf_out);
++
++	/* ZSTD_endStream() already flushed the output buffers */
++	if (close(fd_out))
++		ohshite(_("%s: internal zstd write error"), desc);
++}
++
++#else
++static const char *env_zstd[] = {};
++
++static void
++decompress_zstd(struct compress_params *params, int fd_in, int fd_out,
++              const char *desc)
++{
++	fd_fd_filter(fd_in, fd_out, desc, env_zstd, ZSTD, "-dcq", NULL);
++}
++
++static void
++compress_zstd(struct compress_params *params, int fd_in, int fd_out,
++            const char *desc)
++{
++	char combuf[6];
++
++	snprintf(combuf, sizeof(combuf), "-c%d", params->level);
++	fd_fd_filter(fd_in, fd_out, desc, env_zstd, ZSTD, combuf, "-q", NULL);
++}
++#endif
++
++static const struct compressor compressor_zstd = {
++	.name = "zstd",
++	.extension = ".zst",
++        /* zstd commands's default is 3 but the aim is to be closer to xz's
++         * default compression efficiency */
++	.default_level = 19,
++	.fixup_params = fixup_none_params,
++	.compress = compress_zstd,
++	.decompress = decompress_zstd,
++};
++
++/*
+  * Generic compressor filter.
+  */
+ 
+@@ -1004,6 +1163,7 @@ static const struct compressor *compress
+ 	[COMPRESSOR_TYPE_XZ] = &compressor_xz,
+ 	[COMPRESSOR_TYPE_BZIP2] = &compressor_bzip2,
+ 	[COMPRESSOR_TYPE_LZMA] = &compressor_lzma,
++	[COMPRESSOR_TYPE_ZSTD] = &compressor_zstd,
+ };
+ 
+ static const struct compressor *
+diff -pruN a/lib/dpkg/compress.h b/lib/dpkg/compress.h
+--- a/lib/dpkg/compress.h	2022-07-01 02:44:27.000000000 +0000
++++ b/lib/dpkg/compress.h	2022-07-01 15:16:11.000000000 +0000
+@@ -42,6 +42,7 @@ enum compressor_type {
+ 	COMPRESSOR_TYPE_XZ,
+ 	COMPRESSOR_TYPE_BZIP2,
+ 	COMPRESSOR_TYPE_LZMA,
++	COMPRESSOR_TYPE_ZSTD,
+ };
+ 
+ enum compressor_strategy {
+diff -pruN a/lib/dpkg/Makefile.am b/lib/dpkg/Makefile.am
+--- a/lib/dpkg/Makefile.am	2022-06-30 04:12:20.000000000 +0000
++++ b/lib/dpkg/Makefile.am	2022-07-01 15:16:12.000000000 +0000
+@@ -43,6 +43,7 @@ if BUILD_SHARED
+ libdpkg_la_LIBADD += \
+ 	$(LIBINTL) \
+ 	$(Z_LIBS) \
++	$(ZSTD_LIBS) \
+ 	$(LZMA_LIBS) \
+ 	$(BZ2_LIBS) \
+ 	# EOL
+diff -pruN a/lib/dpkg/Makefile.in b/lib/dpkg/Makefile.in
+--- a/lib/dpkg/Makefile.in	2022-07-01 09:25:58.000000000 +0000
++++ b/lib/dpkg/Makefile.in	2022-07-01 15:16:11.000000000 +0000
+@@ -108,6 +108,7 @@ host_triplet = @host@
+ @BUILD_SHARED_TRUE@am__append_2 = \
+ @BUILD_SHARED_TRUE@	$(LIBINTL) \
+ @BUILD_SHARED_TRUE@	$(Z_LIBS) \
++@BUILD_SHARED_TRUE@	$(ZSTD_LIBS) \
+ @BUILD_SHARED_TRUE@	$(LZMA_LIBS) \
+ @BUILD_SHARED_TRUE@	$(BZ2_LIBS) \
+ @BUILD_SHARED_TRUE@	# EOL
+@@ -188,7 +189,7 @@ LTLIBRARIES = $(devlib_LTLIBRARIES)
+ am__DEPENDENCIES_1 =
+ @BUILD_SHARED_TRUE@am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1) \
+ @BUILD_SHARED_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+-@BUILD_SHARED_TRUE@	$(am__DEPENDENCIES_1)
++@BUILD_SHARED_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+ libdpkg_la_DEPENDENCIES = ../compat/libcompat.la $(am__DEPENDENCIES_2)
+ am_libdpkg_la_OBJECTS = ar.lo arch.lo atomic-file.lo buffer.lo \
+ 	c-ctype.lo cleanup.lo color.lo command.lo compress.lo dbdir.lo \
+@@ -677,6 +678,7 @@ VERSION = @VERSION@
+ XGETTEXT = @XGETTEXT@
+ XGETTEXT_015 = @XGETTEXT_015@
+ XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
++ZSTD_LIBS = @ZSTD_LIBS@
+ Z_LIBS = @Z_LIBS@
+ Z_NG_LIBS = @Z_NG_LIBS@
+ abs_builddir = @abs_builddir@
+diff -pruN a/lib/dpkg/parse.c b/lib/dpkg/parse.c
+--- a/lib/dpkg/parse.c	2022-06-30 04:12:20.000000000 +0000
++++ b/lib/dpkg/parse.c	2022-07-01 15:16:11.000000000 +0000
+@@ -319,7 +319,8 @@ parse_count_pkg_instance(struct pkgcount
+   if (pkg->status == PKG_STAT_NOTINSTALLED)
+      return;
+ 
+-  if (pkgbin->multiarch == PKG_MULTIARCH_SAME)
++  // mvo: consider stat_configfiles multiarch to prevent LP: #1015567
++  if (pkgbin->multiarch == PKG_MULTIARCH_SAME || pkg->status == PKG_STAT_CONFIGFILES)
+     count->multi++;
+   else
+     count->single++;
+diff -pruN a/lib/dpkg/pkg-spec.c b/lib/dpkg/pkg-spec.c
+--- a/lib/dpkg/pkg-spec.c	2022-06-18 17:57:43.000000000 +0000
++++ b/lib/dpkg/pkg-spec.c	2022-07-01 15:16:12.000000000 +0000
+@@ -102,10 +102,7 @@ pkg_spec_is_illegal(struct pkg_spec *ps)
+ 		/* Single instancing only applies with no architecture. */
+ 		if (ps->arch->type == DPKG_ARCH_NONE &&
+ 		    pkgset_installed_instances(set) > 1) {
+-			snprintf(msg, sizeof(msg),
+-			         _("ambiguous package name '%s' with more "
+-			           "than one installed instance"), ps->name);
+-			return msg;
++			ps->arch = dpkg_arch_get(DPKG_ARCH_NATIVE);
+ 		}
+ 	}
+ 
+diff -pruN a/lib/Makefile.in b/lib/Makefile.in
+--- a/lib/Makefile.in	2022-07-01 09:25:58.000000000 +0000
++++ b/lib/Makefile.in	2022-07-01 15:16:11.000000000 +0000
+@@ -318,6 +318,7 @@ VERSION = @VERSION@
+ XGETTEXT = @XGETTEXT@
+ XGETTEXT_015 = @XGETTEXT_015@
+ XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
++ZSTD_LIBS = @ZSTD_LIBS@
+ Z_LIBS = @Z_LIBS@
+ Z_NG_LIBS = @Z_NG_LIBS@
+ abs_builddir = @abs_builddir@
+diff -pruN a/m4/dpkg-build.m4 b/m4/dpkg-build.m4
+--- a/m4/dpkg-build.m4	2022-06-30 04:12:20.000000000 +0000
++++ b/m4/dpkg-build.m4	2022-07-01 15:16:05.000000000 +0000
+@@ -78,7 +78,7 @@ AC_DEFUN([DPKG_DEB_COMPRESSOR], [
+       [change default dpkg-deb build compressor])],
+     [with_dpkg_deb_compressor=$withval], [with_dpkg_deb_compressor=$1])
+   AS_CASE([$with_dpkg_deb_compressor],
+-    [gzip|xz], [:],
++    [gzip|xz|zstd], [:],
+     [AC_MSG_ERROR([unsupported default compressor $with_dpkg_deb_compressor])])
+   AC_DEFINE_UNQUOTED([DPKG_DEB_DEFAULT_COMPRESSOR],
+     [COMPRESSOR_TYPE_]AS_TR_CPP(${with_dpkg_deb_compressor}),
+diff -pruN a/m4/dpkg-libs.m4 b/m4/dpkg-libs.m4
+--- a/m4/dpkg-libs.m4	2022-06-30 04:12:20.000000000 +0000
++++ b/m4/dpkg-libs.m4	2022-07-01 15:16:05.000000000 +0000
+@@ -100,6 +100,13 @@ AC_DEFUN([DPKG_LIB_Z], [
+                      [Define to the zlib implementation to use])
+ ])# DPKG_LIB_Z
+ 
++# DPKG_LIB_ZSTD
++# -------------
++# Check for zstd library.
++AC_DEFUN([DPKG_LIB_ZSTD], [
++  DPKG_WITH_COMPRESS_LIB([zstd], [zstd.h], [ZSTD_decompressStream])
++])# DPKG_LIB_ZSTD
++
+ # DPKG_LIB_LZMA
+ # -------------
+ # Check for lzma library.
+diff -pruN a/Makefile.in b/Makefile.in
+--- a/Makefile.in	2022-07-01 09:25:58.000000000 +0000
++++ b/Makefile.in	2022-07-01 15:15:53.000000000 +0000
+@@ -223,7 +223,7 @@ am__DIST_COMMON = $(srcdir)/Makefile.in
+ 	$(top_srcdir)/build-aux/ltmain.sh \
+ 	$(top_srcdir)/build-aux/missing $(top_srcdir)/build-aux/tap.am \
+ 	$(top_srcdir)/doc/Doxyfile.in $(top_srcdir)/src/at/atlocal.in \
+-	ABOUT-NLS AUTHORS COPYING NEWS README THANKS TODO \
++	ABOUT-NLS AUTHORS COPYING ChangeLog NEWS README THANKS TODO \
+ 	build-aux/ar-lib build-aux/compile build-aux/config.guess \
+ 	build-aux/config.rpath build-aux/config.sub \
+ 	build-aux/install-sh build-aux/ltmain.sh build-aux/missing
+@@ -396,6 +396,7 @@ VERSION = @VERSION@
+ XGETTEXT = @XGETTEXT@
+ XGETTEXT_015 = @XGETTEXT_015@
+ XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
++ZSTD_LIBS = @ZSTD_LIBS@
+ Z_LIBS = @Z_LIBS@
+ Z_NG_LIBS = @Z_NG_LIBS@
+ abs_builddir = @abs_builddir@
+diff -pruN a/man/dpkg-buildflags.pod b/man/dpkg-buildflags.pod
+--- a/man/dpkg-buildflags.pod	2022-06-30 04:12:20.000000000 +0000
++++ b/man/dpkg-buildflags.pod	2022-07-01 15:16:05.000000000 +0000
+@@ -376,6 +376,24 @@ B<FFLAGS>, B<FCFLAGS> and B<LDFLAGS>.
+ 
+ =back
+ 
++=head2 optimize
++
++Several compile-time options (detailed below) can be used to help optimize
++a resulting binary (since dpkg 1.21.0).
++B<Note>: enabling B<all> these options can result in unreproducible binary
++artifacts.
++
++=over
++
++=item lto
++
++This setting (since dpkg 1.21.0; disabled by default) enables
++Link Time Optimization by adding B<-flto=auto -ffat-lto-objects> to
++B<CFLAGS>, B<CXXFLAGS>, B<OBJCFLAGS>, B<OBJCXXFLAGS>, B<GCJFLAGS>,
++B<FFLAGS> and B<FCFLAGS>.
++
++=back
++
+ =head2 sanitize
+ 
+ Several compile-time options (detailed below) can be used to help sanitize
+diff -pruN a/man/dpkg-deb.pod b/man/dpkg-deb.pod
+--- a/man/dpkg-deb.pod	2022-07-01 02:44:27.000000000 +0000
++++ b/man/dpkg-deb.pod	2022-07-01 15:16:06.000000000 +0000
+@@ -254,7 +254,7 @@ The default for this field is “${Packa
+ =item B<-z>I<compress-level>
+ 
+ Specify which compression level to use on the compressor backend, when
+-building a package (default is 9 for gzip, 6 for xz).
++building a package (default is 9 for gzip, 6 for xz and 19 for zstd).
+ The accepted values are 0-9 with: 0 being mapped to compressor none for gzip.
+ Before dpkg 1.16.2 level 0 was equivalent to compressor none for all
+ compressors.
+@@ -269,8 +269,8 @@ gzip (since dpkg 1.17.0) and B<extreme>
+ =item B<-Z>I<compress-type>
+ 
+ Specify which compression type to use when building a package.
+-Allowed values are B<gzip>, B<xz> (since dpkg 1.15.6),
+-and B<none> (default is B<xz>).
++Allowed values are B<gzip>, B<xz> (since dpkg 1.15.6), B<zstd>
++(since dpkg 1.19.0.5ubuntu2) and B<none> (default is B<zstd>).
+ 
+ =item B<--[no-]uniform-compression>
+ 
+@@ -278,8 +278,7 @@ Specify that the same compression parame
+ members (i.e. B<control.tar> and B<data.tar>; since dpkg 1.17.6).
+ Otherwise only the
+ B<data.tar> member will use those parameters. The only supported
+-compression types allowed to be uniformly used are B<none>, B<gzip>
+-and B<xz>.
++compression types allowed to be uniformly used are B<none>, B<gzip>, B<xz> and B<zstd>.
+ The B<--no-uniform-compression> option disables uniform compression
+ (since dpkg 1.19.0).
+ Uniform compression is the default (since dpkg 1.19.0).
+diff -pruN a/man/Makefile.in b/man/Makefile.in
+--- a/man/Makefile.in	2022-07-01 09:25:58.000000000 +0000
++++ b/man/Makefile.in	2022-07-01 15:16:05.000000000 +0000
+@@ -308,6 +308,7 @@ VERSION = @VERSION@
+ XGETTEXT = @XGETTEXT@
+ XGETTEXT_015 = @XGETTEXT_015@
+ XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
++ZSTD_LIBS = @ZSTD_LIBS@
+ Z_LIBS = @Z_LIBS@
+ Z_NG_LIBS = @Z_NG_LIBS@
+ abs_builddir = @abs_builddir@
+diff -pruN a/README b/README
+--- a/README	2022-06-30 04:12:20.000000000 +0000
++++ b/README	2022-07-01 15:15:53.000000000 +0000
+@@ -83,6 +83,7 @@ To enable optional functionality or prog
+ 
+   libmd (used by libdpkg, currently falling back to embedded code)
+   libz (from zlib, used instead of gzip command-line tool)
++  libzstd (from libzstd, used instead of zstd command-line tool)
+   liblzma (from xz utils, used instead of xz command-line tool)
+   libbz2 (from bzip2, used instead of bzip2 command-line tool)
+   libselinux
+diff -pruN a/scripts/Dpkg/BuildProfiles.pm b/scripts/Dpkg/BuildProfiles.pm
+--- a/scripts/Dpkg/BuildProfiles.pm	2022-06-18 17:57:43.000000000 +0000
++++ b/scripts/Dpkg/BuildProfiles.pm	2022-07-01 15:16:02.000000000 +0000
+@@ -30,6 +30,7 @@ use Exporter qw(import);
+ use List::Util qw(any);
+ 
+ use Dpkg::Build::Env;
++use Dpkg::Vendor qw(run_vendor_hook);
+ 
+ my $cache_profiles;
+ my @build_profiles;
+@@ -63,6 +64,7 @@ sub get_build_profiles {
+         @build_profiles = split ' ', Dpkg::Build::Env::get('DEB_BUILD_PROFILES');
+     }
+     $cache_profiles = 1;
++    run_vendor_hook('update-buildprofiles', \@build_profiles);
+ 
+     return @build_profiles;
+ }
+@@ -79,7 +81,8 @@ sub set_build_profiles {
+ 
+     $cache_profiles = 1;
+     @build_profiles = @profiles;
+-    Dpkg::Build::Env::set('DEB_BUILD_PROFILES', join ' ', @profiles);
++    run_vendor_hook('update-buildprofiles', \@build_profiles);
++    Dpkg::Build::Env::set('DEB_BUILD_PROFILES', join ' ', @build_profiles);
+ }
+ 
+ =item @profiles = parse_build_profiles($string)
+diff -pruN a/scripts/Dpkg/Shlibs/Objdump.pm b/scripts/Dpkg/Shlibs/Objdump.pm
+--- a/scripts/Dpkg/Shlibs/Objdump.pm	2022-06-30 04:12:21.000000000 +0000
++++ b/scripts/Dpkg/Shlibs/Objdump.pm	2022-07-01 15:16:02.000000000 +0000
+@@ -24,6 +24,7 @@ our $VERSION = '0.01';
+ 
+ use Dpkg::Gettext;
+ use Dpkg::ErrorHandling;
++use Dpkg::IPC;
+ 
+ sub new {
+     my $this = shift;
+@@ -73,6 +74,53 @@ sub has_object {
+     return exists $self->{objects}{$objid};
+ }
+ 
++sub is_armhf {
++    my ($file) = @_;
++    my ($output, %opts, $pid, $res);
++    my $hf = 0;
++    my $sf = 0;
++    $pid = spawn(exec => [ "readelf", "-h", "--", $file ],
++		 env => { "LC_ALL" => "C" },
++		 to_pipe => \$output, %opts);
++    while (<$output>) {
++	chomp;
++	if (/0x500040./) {
++	    $hf = 1;
++	    last;
++	}
++	if (/0x500020./) {
++	    $sf = 1;
++	    last;
++	}
++    }
++    close($output);
++    wait_child($pid, nocheck => 1);
++    if ($?) {
++	subprocerr("readelf");
++    }
++    if(($hf) || ($sf)) {
++	return $hf;
++    }
++    $hf = 0;
++    undef $output;
++    $pid = spawn(exec => [ "readelf", "-A", "--", $file ],
++		 env => { "LC_ALL" => "C" },
++		 to_pipe => \$output, %opts);
++    while (<$output>) {
++	chomp;
++	if (/Tag_ABI_VFP_args: VFP registers/) {
++	    $hf = 1;
++	    last;
++	}
++    }
++    close($output);
++    wait_child($pid, nocheck => 1);
++    if ($?) {
++	subprocerr("readelf");
++    }
++    return $hf;
++}
++
+ use constant {
+     ELF_BITS_NONE           => 0,
+     ELF_BITS_32             => 1,
+@@ -213,6 +261,14 @@ sub get_format {
+     # Mask any processor flags that might not change the architecture ABI.
+     $elf{flags} &= $elf_flags_mask{$elf{mach}} // 0;
+ 
++    if (($elf{mach} == ELF_MACH_ARM) && ($elf{endian} == ELF_ORDER_2LSB)) {
++        if (is_armhf($file)) {
++            $elf{flags} |= ELF_FLAG_ARM_HARD_FLOAT;
++        } else {
++            $elf{flags} |= ELF_FLAG_ARM_SOFT_FLOAT;
++        }
++    }
++
+     # Repack for easy comparison, as a big-endian byte stream, so that
+     # unpacking for output gives meaningful results.
+     $format{$file} = pack 'C2(SL)>', @elf{qw(bits endian mach flags)};
+@@ -374,6 +430,13 @@ sub parse_objdump_output {
+ 	} elsif ($section eq 'none') {
+ 	    if (/^\s*.+:\s*file\s+format\s+(\S+)$/) {
+ 		$self->{format} = $1;
++		if (($self->{format} eq "elf32-littlearm") && $self->{file}) {
++		    if (Dpkg::Shlibs::Objdump::is_armhf($self->{file})) {
++			$self->{format} = "elf32-littlearm-hfabi";
++		    } else {
++			$self->{format} = "elf32-littlearm-sfabi";
++		    }
++		}
+ 	    } elsif (/^architecture:\s*\S+,\s*flags\s*\S+:$/) {
+ 		# Parse 2 lines of "-f"
+ 		# architecture: i386, flags 0x00000112:
+diff -pruN a/scripts/Dpkg/Source/Package/V3/Native.pm b/scripts/Dpkg/Source/Package/V3/Native.pm
+--- a/scripts/Dpkg/Source/Package/V3/Native.pm	2022-06-18 17:57:43.000000000 +0000
++++ b/scripts/Dpkg/Source/Package/V3/Native.pm	2022-07-01 15:16:02.000000000 +0000
+@@ -73,7 +73,7 @@ sub can_build {
+     my ($self, $dir) = @_;
+ 
+     my $v = Dpkg::Version->new($self->{fields}->{'Version'});
+-    return (0, g_('native package version may not have a revision'))
++    warning (g_('native package version may not have a revision'))
+         unless $v->is_native();
+ 
+     return 1;
+diff -pruN a/scripts/Dpkg/Source/Package/V3/Quilt.pm b/scripts/Dpkg/Source/Package/V3/Quilt.pm
+--- a/scripts/Dpkg/Source/Package/V3/Quilt.pm	2022-06-18 17:57:43.000000000 +0000
++++ b/scripts/Dpkg/Source/Package/V3/Quilt.pm	2022-07-01 15:16:02.000000000 +0000
+@@ -93,7 +93,7 @@ sub can_build {
+     return ($code, $msg) if $code == 0;
+ 
+     my $v = Dpkg::Version->new($self->{fields}->{'Version'});
+-    return (0, g_('non-native package version does not contain a revision'))
++    warning (g_('non-native package version does not contain a revision'))
+         if $v->is_native();
+ 
+     my $quilt = $self->_build_quilt_object($dir);
+diff -pruN a/scripts/Dpkg/Vendor/Debian.pm b/scripts/Dpkg/Vendor/Debian.pm
+--- a/scripts/Dpkg/Vendor/Debian.pm	2022-06-30 23:46:56.000000000 +0000
++++ b/scripts/Dpkg/Vendor/Debian.pm	2022-07-01 15:16:02.000000000 +0000
+@@ -26,6 +26,7 @@ use warnings;
+ our $VERSION = '0.01';
+ 
+ use Dpkg;
++use Dpkg::Arch;
+ use Dpkg::Gettext;
+ use Dpkg::ErrorHandling;
+ use Dpkg::Control::Types;
+@@ -93,6 +94,45 @@ sub run_hook {
+     }
+ }
+ 
++sub _lto_disabled {
++    my $fn = "/usr/share/lto-disabled-list/lto-disabled-list";
++    open(LIST, "<", $fn) or return;
++
++    # get source name
++    -r "debian/control" or return;
++    require Dpkg::Control::Info;
++    my $ctrl = Dpkg::Control::Info->new();
++    my $src_fields = $ctrl->get_source();
++    return unless defined $src_fields;
++
++    my $src = "";
++    foreach (keys %{$src_fields}) {
++	my $v = $src_fields->{$_};
++        if (m/^Source$/i) {
++	    $src = $v;
++	    last;
++	}
++    }
++    return unless $src ne "";
++    
++    my $arch = Dpkg::Arch::get_host_arch();
++
++    # read disabled-list
++    while (<LIST>) {
++        if (m/^$src\s/) {
++	    if (m/^$src\s.*(any|$arch)\s/) {
++		close(LIST);
++		return 1;
++	    } else {
++		close(LIST);
++		return;
++	    }
++	}
++    }
++    close(LIST);
++    return;
++}
++
+ sub _add_build_flags {
+     my ($self, $flags) = @_;
+ 
+@@ -113,6 +153,9 @@ sub _add_build_flags {
+         optimize => {
+             lto => 0,
+         },
++        optimize => {
++            lto => 0,
++        },
+         sanitize => {
+             address => 0,
+             thread => 0,
+@@ -132,6 +175,21 @@ sub _add_build_flags {
+         },
+     );
+ 
++    # no hook to set in Ubuntu.pm
++    require Dpkg::Arch;
++    my $arch = Dpkg::Arch::get_host_arch();
++
++    if (Dpkg::Arch::debarch_eq($arch, 'amd64')
++    	or Dpkg::Arch::debarch_eq($arch, 'arm64')
++    	or Dpkg::Arch::debarch_eq($arch, 'ppc64el')
++    	or Dpkg::Arch::debarch_eq($arch, 's390x'))
++    {
++    	$use_feature{optimize}{lto} = 1;
++    	if (_lto_disabled()) {
++    	    $use_feature{optimize}{lto} = 0;
++        }
++    }
++    
+     my %builtin_feature = (
+         hardening => {
+             pie => 1,
+@@ -151,9 +209,6 @@ sub _add_build_flags {
+         $opts_maint->parse_features($area, $use_feature{$area});
+     }
+ 
+-    require Dpkg::Arch;
+-
+-    my $arch = Dpkg::Arch::get_host_arch();
+     my ($abi, $libc, $os, $cpu) = Dpkg::Arch::debarch_to_debtuple($arch);
+ 
+     unless (defined $abi and defined $libc and defined $os and defined $cpu) {
+@@ -280,6 +335,20 @@ sub _add_build_flags {
+         $flags->append($_, $flag) foreach (@compile_flags, 'LDFLAGS');
+     }
+ 
++    ## Area: optimize
++
++    if ($use_feature{optimize}{lto}) {
++        my $ltoflag = '-flto=auto -ffat-lto-objects';
++        $flags->append('CFLAGS', $ltoflag);
++        $flags->append('CXXFLAGS', $ltoflag);
++        $flags->append('OBJCFLAGS', $ltoflag);
++        $flags->append('OBJCXXFLAGS', $ltoflag);
++        $flags->append('FFLAGS', $ltoflag);
++        $flags->append('FCFLAGS', $ltoflag);
++	
++        $flags->append('LDFLAGS', '-flto=auto');
++    }
++
+     ## Area: sanitize
+ 
+     # Handle logical feature interactions.
+diff -pruN a/scripts/Dpkg/Vendor/Default.pm b/scripts/Dpkg/Vendor/Default.pm
+--- a/scripts/Dpkg/Vendor/Default.pm	2022-06-30 04:12:21.000000000 +0000
++++ b/scripts/Dpkg/Vendor/Default.pm	2022-07-01 15:16:02.000000000 +0000
+@@ -130,6 +130,12 @@ The hook is called in Dpkg::BuildFlags t
+ the default values set for the various build flags. $flags is a
+ Dpkg::BuildFlags object.
+ 
++=item update-buildprofiles ($build_profiles_ref)
++
++The hook is called in Dpkg::BuildProfiles to allow the vendor to
++override the default values set. $build_profiles_ref is a array ref to
++Dpkg::BuildProfiles object.
++
+ =item builtin-system-build-paths ()
+ 
+ The hook is called by dpkg-genbuildinfo to determine if the current path
+@@ -189,6 +195,8 @@ sub run_hook {
+ 	my ($textref, $ch_info) = @params;
+     } elsif ($hook eq 'update-buildflags') {
+ 	my $flags = shift @params;
++    } elsif ($hook eq 'update-buildprofiles') {
++	my $build_profiles_ref = shift @params;
+     } elsif ($hook eq 'builtin-system-build-paths') {
+         return ();
+     } elsif ($hook eq 'build-tainted-by') {
+diff -pruN a/scripts/Dpkg/Vendor/Ubuntu.pm b/scripts/Dpkg/Vendor/Ubuntu.pm
+--- a/scripts/Dpkg/Vendor/Ubuntu.pm	2022-06-30 04:12:21.000000000 +0000
++++ b/scripts/Dpkg/Vendor/Ubuntu.pm	2022-07-01 15:16:02.000000000 +0000
+@@ -92,6 +92,14 @@ sub run_hook {
+             $fields->{'Launchpad-Bugs-Fixed'} = join(' ', @$bugs);
+         }
+ 
++    } elsif ($hook eq 'update-buildopts') {
++	my $build_opts = shift @params;
++	require Dpkg::Arch;
++	my $arch = Dpkg::Arch::get_host_arch();
++	if (Dpkg::Arch::debarch_eq($arch, 'riscv64')) {
++	    $build_opts->set('nocheck', 1, 'riscv64');
++	}
++
+     } elsif ($hook eq 'update-buildflags') {
+ 	my $flags = shift @params;
+ 
+@@ -117,6 +125,14 @@ sub run_hook {
+ 	}
+ 	# Per https://wiki.ubuntu.com/DistCompilerFlags
+         $flags->prepend('LDFLAGS', '-Wl,-Bsymbolic-functions');
++    } elsif ($hook eq 'update-buildprofiles') {
++        my $build_profiles_ref = shift @params;
++        unless(grep $_ =~ /^!?noudeb$/, @$build_profiles_ref) {
++            unshift(@$build_profiles_ref, 'noudeb');
++        } else {
++            # Strip otherwise invalid profile name
++            @$build_profiles_ref = grep { $_ ne "!noudeb" } @$build_profiles_ref;
++        }
+     } else {
+         return $self->SUPER::run_hook($hook, @params);
+     }
+diff -pruN a/scripts/dpkg-buildpackage.pl b/scripts/dpkg-buildpackage.pl
+--- a/scripts/dpkg-buildpackage.pl	2022-06-30 04:12:21.000000000 +0000
++++ b/scripts/dpkg-buildpackage.pl	2022-07-01 15:16:01.000000000 +0000
+@@ -207,6 +207,8 @@ unshift @ARGV, @{$conf};
+ 
+ my $build_opts = Dpkg::BuildOptions->new();
+ 
++run_vendor_hook('update-buildopts', $build_opts);
++
+ if ($build_opts->has('nocheck')) {
+     $check_command = undef;
+ } elsif (not find_command($check_command)) {
+@@ -450,6 +452,8 @@ if (defined $parallel) {
+     }
+     $build_opts->set('parallel', $parallel);
+     $build_opts->export();
++} else {
++    $build_opts->export();
+ }
+ 
+ if ($build_opts->has('terse')) {
+@@ -457,7 +461,7 @@ if ($build_opts->has('terse')) {
+     $ENV{MAKEFLAGS} .= ' --no-print-directory';
+ }
+ 
+-set_build_profiles(@build_profiles) if @build_profiles;
++set_build_profiles(@build_profiles);
+ 
+ my $changelog = changelog_parse();
+ my $ctrl = Dpkg::Control::Info->new();
+diff -pruN a/scripts/dpkg-gencontrol.pl b/scripts/dpkg-gencontrol.pl
+--- a/scripts/dpkg-gencontrol.pl	2022-06-30 04:12:21.000000000 +0000
++++ b/scripts/dpkg-gencontrol.pl	2022-07-01 15:16:01.000000000 +0000
+@@ -313,7 +313,8 @@ for my $f (qw(Maintainer Description)) {
+         unless defined $fields->{$f};
+ }
+ 
+-my $pkg_type = $pkg->{'Package-Type'} ||
++my $pkg_type = $override{'Package-Type'} ||
++               $pkg->{'Package-Type'} ||
+                $pkg->get_custom_field('Package-Type') || 'deb';
+ 
+ if ($pkg_type eq 'udeb') {
+diff -pruN a/scripts/Makefile.in b/scripts/Makefile.in
+--- a/scripts/Makefile.in	2022-07-01 09:25:58.000000000 +0000
++++ b/scripts/Makefile.in	2022-07-01 15:16:01.000000000 +0000
+@@ -375,6 +375,7 @@ VERSION = @VERSION@
+ XGETTEXT = @XGETTEXT@
+ XGETTEXT_015 = @XGETTEXT_015@
+ XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
++ZSTD_LIBS = @ZSTD_LIBS@
+ Z_LIBS = @Z_LIBS@
+ Z_NG_LIBS = @Z_NG_LIBS@
+ abs_builddir = @abs_builddir@
+diff -pruN a/scripts/mk/Makefile.in b/scripts/mk/Makefile.in
+--- a/scripts/mk/Makefile.in	2022-07-01 09:25:58.000000000 +0000
++++ b/scripts/mk/Makefile.in	2022-07-01 15:16:04.000000000 +0000
+@@ -298,6 +298,7 @@ VERSION = @VERSION@
+ XGETTEXT = @XGETTEXT@
+ XGETTEXT_015 = @XGETTEXT_015@
+ XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
++ZSTD_LIBS = @ZSTD_LIBS@
+ Z_LIBS = @Z_LIBS@
+ Z_NG_LIBS = @Z_NG_LIBS@
+ abs_builddir = @abs_builddir@
+diff -pruN a/scripts/t/Dpkg_BuildProfiles.t b/scripts/t/Dpkg_BuildProfiles.t
+--- a/scripts/t/Dpkg_BuildProfiles.t	2022-06-18 17:57:44.000000000 +0000
++++ b/scripts/t/Dpkg_BuildProfiles.t	2022-07-01 15:16:03.000000000 +0000
+@@ -16,7 +16,7 @@
+ use strict;
+ use warnings;
+ 
+-use Test::More tests => 8;
++use Test::More tests => 10;
+ 
+ BEGIN {
+     use_ok('Dpkg::BuildProfiles', qw(parse_build_profiles
+@@ -26,6 +26,9 @@ BEGIN {
+ 
+ # TODO: Add actual test cases.
+ 
++# Check stock things
++$ENV{DEB_VENDOR} = 'Debian';
++
+ my $formula;
+ 
+ $formula = [ ];
+@@ -58,4 +61,16 @@ set_build_profiles(qw(nocheck stage1));
+ is_deeply([ get_build_profiles() ], [ qw(nocheck stage1) ],
+     'get active build profiles explicitly set');
+ 
++# Check Ubuntu vendor hook
++$ENV{DEB_VENDOR} = 'Ubuntu';
++
++set_build_profiles(qw(nocheck stage1));
++is_deeply([ get_build_profiles() ], [ qw(noudeb nocheck stage1) ],
++    'get active build profiles explicitly set');
++
++set_build_profiles(qw(!noudeb nocheck stage1));
++is_deeply([ get_build_profiles() ], [ qw(nocheck stage1) ],
++    'get active build profiles explicitly set');
++
++
+ 1;
+diff -pruN a/src/at/deb-format.at b/src/at/deb-format.at
+--- a/src/at/deb-format.at	2022-06-30 04:12:21.000000000 +0000
++++ b/src/at/deb-format.at	2022-07-01 15:16:04.000000000 +0000
+@@ -187,6 +187,7 @@ xz -c control.tar >control.tar.xz
+ xz -c data.tar >data.tar.xz
+ bzip2 -c data.tar >data.tar.bz2
+ lzma -c data.tar >data.tar.lzma
++pzstd -q -c data.tar >data.tar.zst
+ touch _ignore
+ touch unknown
+ ])
+@@ -474,6 +475,18 @@ data.tar.bz2
+ drwxr-xr-x root/root         0 1970-01-01 00:00 ./
+ -rw-r--r-- root/root         5 1970-01-01 00:00 ./file-templ
+ ])
++
++AT_CHECK([
++# Test data.tar.zst member
++ar rc pkg-data-zst.deb debian-binary control.tar.gz data.tar.zst
++ar t pkg-data-zst.deb
++dpkg-deb -c pkg-data-zst.deb
++], [], [debian-binary
++control.tar.gz
++data.tar.zst
++drwxr-xr-x root/root         0 1970-01-01 00:00 ./
++-rw-r--r-- root/root         5 1970-01-01 00:00 ./file-templ
++])
+ 
+ AT_CHECK([
+ # Test data.tar.lzma member
+diff -pruN a/src/deb/extract.c b/src/deb/extract.c
+--- a/src/deb/extract.c	2022-07-01 02:44:27.000000000 +0000
++++ b/src/deb/extract.c	2022-07-01 15:16:05.000000000 +0000
+@@ -184,6 +184,7 @@ extracthalf(const char *debar, const cha
+           decompress_params.type = compressor_find_by_extension(extension);
+           if (decompress_params.type != COMPRESSOR_TYPE_NONE &&
+               decompress_params.type != COMPRESSOR_TYPE_GZIP &&
++              decompress_params.type != COMPRESSOR_TYPE_ZSTD &&
+               decompress_params.type != COMPRESSOR_TYPE_XZ)
+             ohshit(_("archive '%s' uses unknown compression for member '%.*s', "
+                      "giving up"),
+diff -pruN a/src/deb/main.c b/src/deb/main.c
+--- a/src/deb/main.c	2022-07-01 02:44:27.000000000 +0000
++++ b/src/deb/main.c	2022-07-01 15:16:05.000000000 +0000
+@@ -109,7 +109,7 @@ usage(const struct cmdinfo *cip, const c
+ "      --[no-]uniform-compression   Use the compression params on all members.\n"
+ "  -z#                              Set the compression level when building.\n"
+ "  -Z<type>                         Set the compression type used when building.\n"
+-"                                     Allowed types: gzip, xz, none.\n"
++"                                     Allowed types: gzip, xz, zstd, none.\n"
+ "  -S<strategy>                     Set the compression strategy when building.\n"
+ "                                     Allowed values: none; extreme (xz);\n"
+ "                                     filtered, huffman, rle, fixed (gzip).\n"
+@@ -254,6 +254,7 @@ int main(int argc, const char *const *ar
+   if (opt_uniform_compression &&
+       (compress_params.type != COMPRESSOR_TYPE_NONE &&
+        compress_params.type != COMPRESSOR_TYPE_GZIP &&
++       compress_params.type != COMPRESSOR_TYPE_ZSTD &&
+        compress_params.type != COMPRESSOR_TYPE_XZ))
+     badusage(_("unsupported compression type '%s' with uniform compression"),
+              compressor_get_name(compress_params.type));
+diff -pruN a/src/Makefile.am b/src/Makefile.am
+--- a/src/Makefile.am	2022-06-30 04:12:21.000000000 +0000
++++ b/src/Makefile.am	2022-07-01 15:16:04.000000000 +0000
+@@ -99,6 +99,7 @@ dpkg_deb_SOURCES = \
+ dpkg_deb_LDADD = \
+ 	$(LDADD) \
+ 	$(Z_LIBS) \
++	$(ZSTD_LIBS) \
+ 	$(LZMA_LIBS) \
+ 	$(BZ2_LIBS) \
+ 	# EOL
+diff -pruN a/src/Makefile.in b/src/Makefile.in
+--- a/src/Makefile.in	2022-07-01 09:25:58.000000000 +0000
++++ b/src/Makefile.in	2022-07-01 15:16:04.000000000 +0000
+@@ -153,7 +153,8 @@ am_dpkg_deb_OBJECTS = deb/build.$(OBJEXT
+ 	deb/info.$(OBJEXT) deb/main.$(OBJEXT)
+ dpkg_deb_OBJECTS = $(am_dpkg_deb_OBJECTS)
+ dpkg_deb_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
+-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
++	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
++	$(am__DEPENDENCIES_1)
+ am_dpkg_divert_OBJECTS = divert/main.$(OBJEXT)
+ dpkg_divert_OBJECTS = $(am_dpkg_divert_OBJECTS)
+ dpkg_divert_LDADD = $(LDADD)
+@@ -422,6 +423,7 @@ VERSION = @VERSION@
+ XGETTEXT = @XGETTEXT@
+ XGETTEXT_015 = @XGETTEXT_015@
+ XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
++ZSTD_LIBS = @ZSTD_LIBS@
+ Z_LIBS = @Z_LIBS@
+ Z_NG_LIBS = @Z_NG_LIBS@
+ abs_builddir = @abs_builddir@
+@@ -565,6 +567,7 @@ dpkg_deb_SOURCES = \
+ dpkg_deb_LDADD = \
+ 	$(LDADD) \
+ 	$(Z_LIBS) \
++	$(ZSTD_LIBS) \
+ 	$(LZMA_LIBS) \
+ 	$(BZ2_LIBS) \
+ 	# EOL
+File a/tests/t-unpack-fifo/pkg-fifo/test-fifo is a fifo while file b/tests/t-unpack-fifo/pkg-fifo/test-fifo is a fifo
+File a/tests/t-unpack-hardlink/pkg-hardlink/test-fifo-link0 is a fifo while file b/tests/t-unpack-hardlink/pkg-hardlink/test-fifo-link0 is a fifo
+File a/tests/t-unpack-hardlink/pkg-hardlink/test-fifo-link1 is a fifo while file b/tests/t-unpack-hardlink/pkg-hardlink/test-fifo-link1 is a fifo
+diff -pruN a/utils/Makefile.in b/utils/Makefile.in
+--- a/utils/Makefile.in	2022-07-01 09:25:58.000000000 +0000
++++ b/utils/Makefile.in	2022-07-01 15:16:13.000000000 +0000
+@@ -374,6 +374,7 @@ VERSION = @VERSION@
+ XGETTEXT = @XGETTEXT@
+ XGETTEXT_015 = @XGETTEXT_015@
+ XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
++ZSTD_LIBS = @ZSTD_LIBS@
+ Z_LIBS = @Z_LIBS@
+ Z_NG_LIBS = @Z_NG_LIBS@
+ abs_builddir = @abs_builddir@
+diff -pruN a/utils/update-alternatives.c b/utils/update-alternatives.c
+--- a/utils/update-alternatives.c	2022-06-30 04:12:21.000000000 +0000
++++ b/utils/update-alternatives.c	2022-07-01 15:16:13.000000000 +0000
+@@ -2922,7 +2922,8 @@ main(int argc, char **argv)
+ 	bool modifies_sys = false;
+ 	int i = 0;
+ 
+-	setlocale(LC_ALL, "");
++	if (getenv("DPKG_UNTRANSLATED_MESSAGES") == NULL)
++		setlocale(LC_ALL, "");
+ 	bindtextdomain(PACKAGE, LOCALEDIR);
+ 	textdomain(PACKAGE);
+ 
