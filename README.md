@@ -56,10 +56,12 @@ This is debian's dpkg, with support for zstd compression added [by backporting i
 
 This makes it possible to deal with Ubuntu packages in Debian systems, as Ubuntu switched to ztsd compression, such as when building Ubuntu debootstraps on Debian, managing repos, importing packages and similar operations.
 
+Built for Bullseye (dpkg 1.20), Bookworm, and Sid (dpkg 1.21)
+
 ### Installing
 Add repo and key (see previous instructions) and run ```apt update```.
 
-While this dpkg build is known to work fine and I use it on all my systems, as dpkg is a rather important part of any Debian system, I would recommend using it only on systems where you will be working with packages. You might want to create a preferences file to prevent apt from installing it should you be using other packages from this repo (replace deb.debian.org with your Debian mirror if you're using a different one):
+While this dpkg build is known to work fine and I use it on all my systems, as dpkg is a rather important part of any Debian system, I would recommend using it only on Debian systems where you will be working with Ubuntu packages. You might want to create a preferences file to prevent apt from installing it should you be using other packages from this repo (replace deb.debian.org with your Debian mirror if you're using a different one):
 
 */etc/apt/preferences.d/20-dpkg*
 ```

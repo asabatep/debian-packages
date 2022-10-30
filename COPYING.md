@@ -1,9 +1,11 @@
-# License for the resulting packages
+# License for patches and the resulting packages
 Of course, the resulting packages from building from this repo are under the license of their respective upstream projects. You should refer to their documentation in case of doubt, but these are:
  - command-not-found: [GPL 2](https://launchpad.net/command-not-found)
+ - dpkg: [GPL 2](https://salsa.debian.org/dpkg-team/dpkg/-/blob/main/COPYING)
  - Glib: [LGPL 2.1 or later](https://gitlab.gnome.org/GNOME/glib/-/blob/main/COPYING)
  - globalprotect-openconnect: [GPL 3](https://github.com/yuezk/GlobalProtect-openconnect/blob/master/LICENSE)
  - GTK+3: [LGPL 2.1 or later](https://gitlab.gnome.org/GNOME/gtk/-/blob/main/COPYING)
+ - hadolint: [GPL 3](https://github.com/hadolint/hadolint/blob/master/LICENSE)
 
 # License for anything else (makefiles, build scripts)
 These are so simple and trivial they hardly qualify for copyright, but for clarity I'm releasing them under MIT-0:
