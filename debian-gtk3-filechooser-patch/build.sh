@@ -29,10 +29,7 @@ if grep -qi ubuntu /etc/os-release ; then
 fi
 
 sed -i 's/xvfb-run/true/g' ./debian/rules # xxx
-
-if grep -qi kinetic /etc/os-release ; then
-    sed -i 's/debian\/run-tests.sh/true/g' ./debian/rules
-fi
+sed -i 's/debian\/run-tests.sh/true/g' ./debian/rules
 
 NAME="repo.lol" EMAIL="pkgs@repo.lol" dch --nmu "apply filechooser patch"
 sed -i s/UNRELEASED/$RELEASE/ ./debian/changelog
