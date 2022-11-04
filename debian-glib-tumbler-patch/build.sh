@@ -25,7 +25,7 @@ quilt pop -a
 sed -i '/glocalfileinfo-Add-support-for-xx-large-and-x-large-thumb.patch/d' debian/patches/series
 sed -i '/gio-tests-Add-file-thumbnail-tests.patch/d' debian/patches/series
 
-if grep -qi bullseye /etc/os-release ; then
+if grep -Eqi '(bullseye|jammy|kinetic)' /etc/os-release ; then
     quilt import -P glib-thumbnailer.patch /src/glib-thumbnailer-legacy.patch
 else
     quilt import -P glib-thumbnailer.patch /src/glib-thumbnailer.patch
