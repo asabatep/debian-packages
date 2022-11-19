@@ -14,7 +14,7 @@ rm -rf *
 
 apt-get -y update
 apt-get -y upgrade
-apt-get -y install devscripts quilt
+apt-get -y install devscripts quilt faketime
 
 apt-get -y build-dep glib2.0
 apt-get source glib2.0
@@ -40,7 +40,7 @@ fi
 sed -i 's/handle_test_failure := exit $$?/handle_test_failure := true/' ./debian/rules # xxx
 sed -i '0,/^Recommends/{s/^Recommends: /Recommends: tumbler, /}' ./debian/control.in
 
-NAME="repo.lol" EMAIL="pkgs@repo.lol" dch --nmu "apply tumbler patch"
+NAME="repo.lol" EMAIL="pkgs@repo.lol" faketime 'today 00:00' dch --nmu "apply tumbler patch"
 sed -i s/UNRELEASED/$RELEASE/ ./debian/changelog
 
 dpkg-buildpackage --compression=gzip

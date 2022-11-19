@@ -14,7 +14,7 @@ rm -rf *
 
 apt-get -y update
 apt-get -y upgrade
-apt-get -y install devscripts quilt
+apt-get -y install devscripts quilt faketime
 
 apt-get -y build-dep gtk+3.0
 apt-get source gtk+3.0
@@ -31,7 +31,7 @@ fi
 sed -i 's/xvfb-run/true/g' ./debian/rules # xxx
 sed -i 's/debian\/run-tests.sh/true/g' ./debian/rules
 
-NAME="repo.lol" EMAIL="pkgs@repo.lol" dch --nmu "apply filechooser patch"
+NAME="repo.lol" EMAIL="pkgs@repo.lol" faketime 'today 00:00' dch --nmu "apply filechooser patch"
 sed -i s/UNRELEASED/$RELEASE/ ./debian/changelog
 
 dpkg-buildpackage --compression=gzip
