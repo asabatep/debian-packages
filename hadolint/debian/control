@@ -2,7 +2,7 @@ Source: hadolint
 Section: haskell
 Priority: optional
 Maintainer: Albert Sabaté <pkgs@repo.lol>
-Build-Depends: debhelper-compat (= 13), haskell-stack
+Build-Depends: debhelper-compat (= 13), haskell-stack, help2man
 Standards-Version: 4.5.1
 Homepage: https://github.com/hadolint/hadolint
 Rules-Requires-Root: no

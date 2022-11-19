@@ -1,0 +1,20 @@
+[EXAMPLES]
+hadolint DOCKERFILE
+.RS
+Lint the Dockerfile DOCKERFILE.
+
+.RE
+hadolint --ignore DL3003 --ignore DL3006 DOCKERFILE
+.RS
+Lint the Dockerfile DOCKERFILE, but do not issue a warning or error on rules DL3003 or DL3006.
+
+.RE
+cat Dockerfile | hadolint -
+.RS
+Lint the Dockerfile read from standard input.
+
+.RE
+[SEE ALSO]
+shellcheck(1)
+
+Full documentation is online at https://github.com/hadolint/hadolint.

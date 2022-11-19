@@ -1,14 +1,14 @@
+hadolint (2.12.0-2) unstable; urgency=medium
+
+  * Packaging fixes to silence lintian warnings
+
+ -- Albert Sabaté <pkgs@repo.lol>  Sat, 19 Nov 2022 17:34:45 +0000
+
 hadolint (2.12.0-1) unstable; urgency=medium
 
   * New upstream release
-  * Upstream changelog: https://github.com/hadolint/hadolint/releases/tag/v2.12.0
-
- -- Albert Sabaté <pkgs@repo.lol>  Mon, 14 Nov 2022 15:00:51 +0000
-
-hadolint (2.11.0-1) unstable; urgency=medium
-
-  * New upstream release
-  * Upstream changelog: https://github.com/hadolint/hadolint/releases/tag/v2.11.0
+  * Upstream changelog: 
+    https://github.com/hadolint/hadolint/releases/tag/v2.12.0
 
  -- Albert Sabaté <pkgs@repo.lol>  Mon, 14 Nov 2022 15:00:51 +0000
 

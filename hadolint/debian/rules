@@ -1,9 +1,18 @@
 #!/usr/bin/make -f
+export DH_VERBOSE = 1
 export STACK_FLAGS = --system-ghc --no-install-ghc --skip-ghc-check
 
-install:
-	cp debian/stack.yaml .
-	stack -j$$(nproc) --local-bin-path=./debian/hadolint/usr/bin install $(STACK_FLAGS)
+include /usr/share/dpkg/default.mk
 
 %:
 	dh $@
+
+override_dh_installman:
+	help2man ./debian/hadolint/usr/bin/hadolint -N --name="Lint Dockerfile for errors and best practices" --version-string="hadolint" --include ./debian/help2man-incl > ./debian/hadolint.1
+	dh_installman
+
+override_dh_auto_install:
+	cp debian/stack.yaml .
+	stack -j$$(nproc) --local-bin-path=./debian/hadolint/usr/bin install $(STACK_FLAGS)
+
+
