@@ -16,4 +16,4 @@ build:
 		-v $$(pwd)/output:/output \
 		-v $$(pwd)/build.sh:/build.sh \
 		-v $$(pwd)/work:/work \
-		docker.io/debian:11 /bin/bash -c "VER=${VER} /build.sh"
+		docker.io/debian:bookworm /bin/bash -c "VER=${VER} /build.sh"

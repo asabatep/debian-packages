@@ -1,10 +1,8 @@
 #!/usr/bin/make -f
 export STACK_FLAGS = --system-ghc --no-install-ghc --skip-ghc-check
 
-build:
-	stack -j$$(nproc) build $(STACK_FLAGS)
-
 install:
+	cp debian/stack.yaml .
 	stack -j$$(nproc) --local-bin-path=./debian/hadolint/usr/bin install $(STACK_FLAGS)
 
 %:
