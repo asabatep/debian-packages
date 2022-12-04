@@ -242,17 +242,6 @@ diff -pruN a/debian/rules b/debian/rules
  		--with-liblzma \
  		--with-libbz2 \
  		# EOL
-@@ -80,3 +81,10 @@ override_dh_installchangelogs:
- 
- override_dh_bugfiles:
- 	dh_bugfiles -A
-+
-+override_dh_builddeb:
-+	# Make debootstrap life easier on non-Debian based systems by
-+	# compressing dpkg.deb with xz instead of zstd.
-+	dh_builddeb -pdpkg -- -Zxz
-+	dh_builddeb -a -Ndpkg
-+	dh_builddeb
 diff -pruN a/dselect/Makefile.in b/dselect/Makefile.in
 --- a/dselect/Makefile.in	2022-07-01 09:25:58.000000000 +0000
 +++ b/dselect/Makefile.in	2022-07-01 15:16:13.000000000 +0000
