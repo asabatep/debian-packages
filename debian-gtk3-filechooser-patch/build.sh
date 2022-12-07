@@ -31,7 +31,7 @@ fi
 sed -i 's/xvfb-run/true/g' ./debian/rules # xxx
 sed -i 's/debian\/run-tests.sh/true/g' ./debian/rules
 
-NAME="repo.lol" EMAIL="pkgs@repo.lol" faketime 'today 00:00' dch --nmu "apply filechooser patch"
+NAME="repo.lol" EMAIL="pkgs@repo.lol" @$(expr $(date -d "$(grep " --" ./debian/changelog | head -n1 | awk -F\>\  '{print $NF}')" +%s) + 60) dch --nmu "apply filechooser patch"
 sed -i s/UNRELEASED/$RELEASE/ ./debian/changelog
 
 dpkg-buildpackage --compression=gzip
