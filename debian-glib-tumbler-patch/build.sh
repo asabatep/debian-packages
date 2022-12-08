@@ -40,7 +40,9 @@ fi
 sed -i 's/handle_test_failure := exit $$?/handle_test_failure := true/' ./debian/rules # xxx
 sed -i '0,/^Recommends/{s/^Recommends: /Recommends: tumbler, /}' ./debian/control.in
 
-NAME="repo.lol" EMAIL="pkgs@repo.lol" faketime @$(expr $(date -d "$(grep " --" ./debian/changelog | head -n1 | awk -F\>\  '{print $NF}')" +%s) + 60) dch --nmu "apply tumbler patch"
+NAME="repo.lol" EMAIL="pkgs@repo.lol" \
+    faketime @$(expr $(date -d "$(grep -E "^ -- \w+ \w+ <\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b>.*$" ./debian/changelog | head -n1 | awk -F\>\  '{print $NF}')" +%s) + 60) \
+    dch --nmu "apply tumbler patch"
 sed -i s/UNRELEASED/$RELEASE/ ./debian/changelog
 
 dpkg-buildpackage --compression=gzip
