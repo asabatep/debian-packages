@@ -14,7 +14,7 @@ rm -rf *
 
 apt-get -y update
 apt-get -y upgrade
-apt-get -y install build-essential cmake debhelper qtbase5-dev libqt5websockets5-dev qtwebengine5-dev wget
+apt-get -y install build-essential cmake debhelper qtbase5-dev libqt5websockets5-dev qtwebengine5-dev wget pkg-config qttools5-dev qt5keychain-dev
 
 wget --content-d https://github.com/yuezk/GlobalProtect-openconnect/releases/download/v$VER/globalprotect-openconnect-$VER.tar.gz
 tar xvf globalprotect-openconnect-$VER.tar.gz
