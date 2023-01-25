@@ -1,13 +1,7 @@
-all: bullseye bookworm sid installpub
+all: bullseye installpub
 
 bullseye:
 	DISTRO=debian RELEASE=bullseye make build
-
-bookworm:
-	DISTRO=debian RELEASE=bookworm make build
-
-sid:
-	DISTRO=debian RELEASE=sid make build
 
 installpub:
 	set -eux && \

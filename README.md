@@ -12,7 +12,7 @@ This is debian's dpkg, with support for zstd compression added [by backporting i
 
 This makes it possible to deal with Ubuntu packages in Debian systems, as Ubuntu switched to ztsd compression, such as when building Ubuntu debootstraps on Debian, managing repos, importing packages and similar operations.
 
-Built for Bullseye (dpkg 1.20), Bookworm, and Sid (dpkg 1.21)
+Built for Bullseye (dpkg 1.20).
 
 ### python3-commandnotfound
 Debian build of Ubuntu's python3-commandnotfound (which mysteriously disappeared on the former). Built for Debian Bullseye, Bookworm, and Sid.
@@ -78,3 +78,9 @@ echo -ne "Package: $(apt-cache showsrc dpkg|grep " deb "|awk '{print $1}' | xarg
 # After adding the repo, keep glib and gtk from debian (if you want zstd dpkg but keep stock glib and gtk)
 echo -ne "Package: $(apt-cache showsrc glib2.0 gtk+3.0|grep " deb "|awk '{print $1}' | xargs)\nPin: origin repo.lol\nPin-Priority: -1\n" | sudo tee /etc/apt/preferences.d/10-repo-lol
 ```
+
+## retired packages
+
+### dpkg-zstd
+
+dpkg-zstd packages for bookworm have been retired as support has been added upstream.
