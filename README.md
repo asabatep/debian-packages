@@ -35,7 +35,7 @@ Create a file */etc/apt/sources.list.d/repo.lol.list* with the following content
 deb [signed-by=/usr/share/keyrings/repo.lol.gpg] http://repo.lol/debian RELEASE main
 ```
 
-RELEASE must be your distro release: bullseye, bookworm, sid, jammy, kinetic.
+RELEASE must be your distro release: bullseye, bookworm, sid, jammy, kinetic, lunar.
 
 Update your package lists and packages (```apt update ; apt upgrade```). Your dpkg, glib and gtk install will be replaced with the one in this repo, and tumbler will be pulled as a dependency if not installed.
 

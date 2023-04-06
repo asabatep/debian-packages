@@ -1,4 +1,4 @@
-all: bullseye bookworm sid jammy kinetic installpub
+all: bullseye bookworm sid jammy kinetic lunar installpub
 
 bullseye:
 	DISTRO=debian RELEASE=bullseye make build
@@ -14,6 +14,9 @@ jammy:
 
 kinetic:
 	DISTRO=ubuntu RELEASE=kinetic make build
+
+lunar:
+	DISTRO=ubuntu RELEASE=lunar make build
 
 installpub:
 	set -eux && \
