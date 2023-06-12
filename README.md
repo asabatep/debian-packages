@@ -35,7 +35,7 @@ Create a file */etc/apt/sources.list.d/repo.lol.list* with the following content
 deb [signed-by=/usr/share/keyrings/repo.lol.gpg] http://repo.lol/debian RELEASE main
 ```
 
-RELEASE must be your distro release: bullseye, bookworm, trixie, sid, jammy, kinetic, lunar.
+RELEASE must be your distro release: bullseye, bookworm, trixie, sid, jammy, lunar.
 
 Update your package lists and packages (```apt update ; apt upgrade```). Your dpkg, glib and gtk install will be replaced with the one in this repo, and tumbler will be pulled as a dependency if not installed.
 
@@ -84,3 +84,7 @@ echo -ne "Package: $(apt-cache showsrc glib2.0 gtk+3.0|grep " deb "|awk '{print 
 ### dpkg-zstd
 
 dpkg-zstd packages for bookworm have been retired as support has been added upstream.
+
+### ubuntu kinetic packages
+
+retired due to distro eol.

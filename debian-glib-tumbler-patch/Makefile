@@ -1,4 +1,4 @@
-all: bullseye bookworm trixie sid jammy kinetic lunar installpub
+all: bullseye bookworm trixie sid jammy lunar installpub
 
 bullseye:
 	DISTRO=debian RELEASE=bullseye make build
@@ -14,9 +14,6 @@ sid:
 
 jammy:
 	DISTRO=ubuntu RELEASE=jammy make build
-
-kinetic:
-	DISTRO=ubuntu RELEASE=kinetic make build
 
 lunar:
 	DISTRO=ubuntu RELEASE=lunar make build
