@@ -1,10 +1,13 @@
-all: bullseye bookworm sid installpub
+all: bullseye bookworm trixie sid installpub
 
 bullseye:
 	DISTRO=debian RELEASE=bullseye make build
 
 bookworm:
 	DISTRO=debian RELEASE=bookworm make build
+
+trixie:
+	DISTRO=debian RELEASE=trixie make build
 
 sid:
 	DISTRO=debian RELEASE=sid make build

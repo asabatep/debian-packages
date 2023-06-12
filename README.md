@@ -15,7 +15,7 @@ This makes it possible to deal with Ubuntu packages in Debian systems, as Ubuntu
 Built for Bullseye (dpkg 1.20).
 
 ### python3-commandnotfound
-Debian build of Ubuntu's python3-commandnotfound (which mysteriously disappeared on the former). Built for Debian Bullseye, Bookworm, and Sid.
+Debian build of Ubuntu's python3-commandnotfound (which mysteriously disappeared on the former). Built for Debian Bullseye, Bookworm, Trixie, and Sid.
 
 This adds apt support for [thefuck](https://github.com/nvbn/thefuck) on Debian.
 
@@ -35,7 +35,7 @@ Create a file */etc/apt/sources.list.d/repo.lol.list* with the following content
 deb [signed-by=/usr/share/keyrings/repo.lol.gpg] http://repo.lol/debian RELEASE main
 ```
 
-RELEASE must be your distro release: bullseye, bookworm, sid, jammy, kinetic, lunar.
+RELEASE must be your distro release: bullseye, bookworm, trixie, sid, jammy, kinetic, lunar.
 
 Update your package lists and packages (```apt update ; apt upgrade```). Your dpkg, glib and gtk install will be replaced with the one in this repo, and tumbler will be pulled as a dependency if not installed.
 
