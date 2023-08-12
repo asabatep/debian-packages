@@ -11,3 +11,5 @@ hadolint/work/
 hadolint/debian/hadolint/
 dpkg-zstd/output/
 dpkg-zstd/work/
+dnscrypt-proxy/output/
+dnscrypt-proxy/work/

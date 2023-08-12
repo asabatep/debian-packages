@@ -19,6 +19,9 @@ Debian build of Ubuntu's python3-commandnotfound (which mysteriously disappeared
 
 This adds apt support for [thefuck](https://github.com/nvbn/thefuck) on Debian.
 
+### dnscrypt-proxy
+Backport for bookworm only of trixie's dnscrypt-proxy after [it was left on the former](https://github.com/DNSCrypt/dnscrypt-proxy/discussions/2410).
+
 ### globalprotect-openconnect
 Debian build of [yuezk's globalprotect-openconnect VPN client](https://github.com/yuezk/GlobalProtect-openconnect)
 
