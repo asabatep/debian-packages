@@ -18,6 +18,9 @@ jammy:
 lunar:
 	DISTRO=ubuntu RELEASE=lunar make build
 
+mantic:
+	DISTRO=ubuntu RELEASE=mantic make build
+
 installpub:
 	set -eux && \
 	ssh repo-public mkdir -p ~/docker/wwwpub/freight/inbox/${RELEASE} && \
