@@ -13,3 +13,7 @@ dpkg-zstd/output/
 dpkg-zstd/work/
 dnscrypt-proxy/output/
 dnscrypt-proxy/work/
+docker-buildx/output/
+docker-buildx/work/
+docker-compose-v2/output/
+docker-compose-v2/work/
