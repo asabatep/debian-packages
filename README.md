@@ -28,6 +28,9 @@ Debian build of [yuezk's globalprotect-openconnect VPN client](https://github.co
 ### hadolint
 [Hadolint](https://github.com/hadolint/hadolint), a linter for Dockerfiles
 
+### docker-compose-v2 and docker-buildx
+Debian port of Ubuntu's packages for [docker-buildx](https://github.com/canonical/docker-buildx) and [docker-compose-v2](https://github.com/canonical/docker-compose-v2) plugins
+
 ## using this repo
 
 Download the signing key with:

@@ -1,0 +1,26 @@
+all: bookworm trixie sid installpub
+
+bookworm:
+	DISTRO=debian RELEASE=bookworm make build
+
+trixie:
+	DISTRO=debian RELEASE=trixie make build
+
+sid:
+	DISTRO=debian RELEASE=sid make build
+
+installpub:
+	set -eux && \
+	ssh repo-public mkdir -p ~/docker/wwwpub/freight/inbox/${RELEASE} && \
+	scp output/${RELEASE}/*deb repo-public:~/docker/wwwpub/freight/inbox/${RELEASE} && \
+	ssh repo-public docker exec -t www-freight "/usr/local/bin/ship-it.sh ${RELEASE}"
+
+build:
+	mkdir -p output src work
+	docker run --rm \
+		-e TZ=Etc/UTC \
+		-v $$(pwd)/src:/src \
+		-v $$(pwd)/output:/output \
+		-v $$(pwd)/build.sh:/build.sh \
+		-v $$(pwd)/work:/work \
+		docker.io/${DISTRO}:${RELEASE} /bin/bash -c "DISTRO=${DISTRO} RELEASE=${RELEASE} /build.sh"
