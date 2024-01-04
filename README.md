@@ -5,7 +5,7 @@ The sources and documentation for the Debian packages available at https://repo.
 ## available packages
 
 ### gtk3 with the thumbnail file chooser patch and glib2 with thumbnail generator patch
-This is Debian and Ubuntu gtk3 with [dudemanguy's filechooser icon view patch](https://gist.github.com/Dudemanguy/d199759b46a79782cc1b301649dec8a5), that adds an icon view with thumbnails, and libglib2 with the [glib thumbnailer patch](https://gist.github.com/Dudemanguy/d199759b46a79782cc1b301649dec8a5), that will generate the thumbnails themselves with tumbler.
+This is Debian and Ubuntu gtk3 with [dudemanguy's filechooser icon view patch](https://gist.github.com/Dudemanguy/c172394e30e1e7d0f477ad15c719bc71), that adds an icon view with thumbnails, and libglib2 with the [glib thumbnailer patch](https://gist.github.com/Dudemanguy/d199759b46a79782cc1b301649dec8a5), that will generate the thumbnails themselves with tumbler.
 
 ### debian's dpkg with zstd support
 This is debian's dpkg, with support for zstd compression added [by backporting it from Ubuntu](https://patches.ubuntu.com/d/dpkg/dpkg_1.21.9ubuntu1.patch).
@@ -34,7 +34,9 @@ Debian port of Ubuntu's packages for [docker-buildx](https://github.com/canonica
 ## using this repo
 
 Download the signing key with:
-```wget -O /usr/share/keyrings/repo.lol.gpg https://repo.lol/debian/keyring.gpg```
+```
+wget -O /usr/share/keyrings/repo.lol.gpg https://repo.lol/debian/keyring.gpg
+```
 
 Create a file */etc/apt/sources.list.d/repo.lol.list* with the following contents:
 ```
