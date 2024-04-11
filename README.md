@@ -5,7 +5,9 @@ The sources and documentation for the Debian packages available at https://repo.
 ## available packages
 
 ### gtk3 with the thumbnail file chooser patch and glib2 with thumbnail generator patch
-This is Debian and Ubuntu gtk3 with [dudemanguy's filechooser icon view patch](https://gist.github.com/Dudemanguy/c172394e30e1e7d0f477ad15c719bc71), that adds an icon view with thumbnails, and libglib2 with the [glib thumbnailer patch](https://gist.github.com/Dudemanguy/d199759b46a79782cc1b301649dec8a5), that will generate the thumbnails themselves with tumbler.
+This is Debian and Ubuntu gtk3 with [dudemanguy's filechooser icon view patch](https://gist.github.com/Dudemanguy/c172394e30e1e7d0f477ad15c719bc71), that adds an icon view with thumbnails, and libglib2 with the [glib thumbnailer patch](https://gist.github.com/Dudemanguy/d199759b46a79782cc1b301649dec8a5), that will generate the thumbnails themselves with a D-Bus thumbnailer.
+
+Installing these will also add a package recommendation on either [https://packages.debian.org/search?keywords=lomiri-thumbnailer-service](https://packages.debian.org/bookworm/lomiri-thumbnailer-service) or [tumbler](https://packages.debian.org/search?keywords=tumbler)
 
 ### debian's dpkg with zstd support
 This is debian's dpkg, with support for zstd compression added [by backporting it from Ubuntu](https://patches.ubuntu.com/d/dpkg/dpkg_1.21.9ubuntu1.patch).
@@ -43,7 +45,7 @@ Create a file */etc/apt/sources.list.d/repo.lol.list* with the following content
 deb [signed-by=/usr/share/keyrings/repo.lol.gpg] http://repo.lol/debian RELEASE main
 ```
 
-RELEASE must be your distro release: bullseye, bookworm, trixie, sid, jammy, lunar.
+RELEASE must be your distro release: bullseye, bookworm, trixie, sid, jammy, mantic, noble.
 
 Update your package lists and packages (```apt update ; apt upgrade```). Your dpkg, glib and gtk install will be replaced with the one in this repo, and tumbler will be pulled as a dependency if not installed.
 
@@ -93,6 +95,6 @@ echo -ne "Package: $(apt-cache showsrc glib2.0 gtk+3.0|grep " deb "|awk '{print 
 
 dpkg-zstd packages for bookworm have been retired as support has been added upstream.
 
-### ubuntu kinetic packages
+### Old releases
 
-retired due to distro eol.
+Retired due to distro eol: Ubuntu Kinetic, Ubuntu Lunar (local building should still be possible)
