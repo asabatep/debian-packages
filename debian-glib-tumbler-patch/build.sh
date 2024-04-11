@@ -49,7 +49,7 @@ else
     exit 1
 fi
 
-sed -i '0,/^Recommends/{s/^Recommends: /Recommends: tumbler, /}' "$cfile"
+sed -i '0,/^Recommends/{s/^Recommends: /Recommends: lomiri-thumbnailer-service | tumbler, /}' "$cfile"
 
 NAME="repo.lol" EMAIL="pkgs@repo.lol" \
     faketime @$(expr $(date -d "$(grep -E "^ -- \w+ \w+ <\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b>.*$" ./debian/changelog | head -n1 | awk -F\>\  '{print $NF}')" +%s) + 60) \
