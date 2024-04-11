@@ -12,6 +12,9 @@ trixie:
 sid:
 	DISTRO=debian RELEASE=sid make build
 
+noble:
+	DISTRO=ubuntu RELEASE=noble make build
+
 installpub:
 	set -eux && \
 	ssh repo-public mkdir -p ~/docker/wwwpub/freight/inbox/${RELEASE} && \
