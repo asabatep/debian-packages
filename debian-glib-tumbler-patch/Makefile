@@ -15,9 +15,6 @@ sid:
 jammy:
 	DISTRO=ubuntu RELEASE=jammy make build
 
-lunar:
-	DISTRO=ubuntu RELEASE=lunar make build
-
 mantic:
 	DISTRO=ubuntu RELEASE=mantic make build
 
