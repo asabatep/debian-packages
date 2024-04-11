@@ -1,10 +1,13 @@
 # License for patches and the resulting packages
 Of course, the resulting packages from building from this repo are under the license of their respective upstream projects. You should refer to their documentation in case of doubt, but these are:
  - command-not-found: [GPL 2](https://launchpad.net/command-not-found)
+ - dnscrypt-proxy: [ISC](https://github.com/DNSCrypt/dnscrypt-proxy/blob/master/LICENSE)
+ - docker-buildx: [Apache](https://github.com/docker/buildx/blob/main/LICENSE)
+ - docker-compose-v2: [Apache](https://github.com/docker/compose/blob/main/LICENSE)
  - dpkg: [GPL 2](https://salsa.debian.org/dpkg-team/dpkg/-/blob/main/COPYING)
- - Glib: [LGPL 2.1 or later](https://gitlab.gnome.org/GNOME/glib/-/blob/main/COPYING)
+ - glib: [LGPL 2.1 or later](https://gitlab.gnome.org/GNOME/glib/-/blob/main/COPYING)
  - globalprotect-openconnect: [GPL 3](https://github.com/yuezk/GlobalProtect-openconnect/blob/master/LICENSE)
- - GTK+3: [LGPL 2.1 or later](https://gitlab.gnome.org/GNOME/gtk/-/blob/main/COPYING)
+ - gtk3: [LGPL 2.1 or later](https://gitlab.gnome.org/GNOME/gtk/-/blob/main/COPYING)
  - hadolint: [GPL 3](https://github.com/hadolint/hadolint/blob/master/LICENSE)
 
 # License for anything else (makefiles, build scripts)
