@@ -1,0 +1,15 @@
+Source: bdinfo
+Section: video
+Priority: optional
+Maintainer: Albert Sabaté <pkgs@repo.lol>
+Build-Depends: debhelper-compat (= 13), libbluray-dev
+Standards-Version: 4.5.1
+Homepage: https://github.com/schnusch/bdinfo
+Rules-Requires-Root: no
+
+Package: bdinfo
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Recommends: ffmpeg
+Description: Gets info from Blu-Ray video discs
+ bdinfo gets information from Blu-Ray discs and extract tracks including language metadata and chapters.

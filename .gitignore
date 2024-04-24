@@ -9,6 +9,9 @@ globalprotect-openconnect/work/
 hadolint/output/
 hadolint/work/
 hadolint/debian/hadolint/
+bdinfo/output/
+bdinfo/work/
+bdinfo/debian/hadolint/
 dpkg-zstd/output/
 dpkg-zstd/work/
 dnscrypt-proxy/output/

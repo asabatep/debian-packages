@@ -9,7 +9,13 @@ This is Debian and Ubuntu gtk3 with [dudemanguy's filechooser icon view patch](h
 
 Installing these will also add a package recommendation on either [lomiri-thumbnailer-service](https://packages.debian.org/bookworm/lomiri-thumbnailer-service) or [tumbler](https://packages.debian.org/search?keywords=tumbler)
 
-### debian's dpkg with zstd support
+### docker-compose-v2 and docker-buildx
+Debian port of Ubuntu's packages for [docker-buildx](https://github.com/canonical/docker-buildx) and [docker-compose-v2](https://github.com/canonical/docker-compose-v2) plugins
+
+### hadolint
+[Hadolint](https://github.com/hadolint/hadolint), a linter for Dockerfiles
+
+### debian's bullseye dpkg with zstd support
 This is debian's dpkg, with support for zstd compression added [by backporting it from Ubuntu](https://patches.ubuntu.com/d/dpkg/dpkg_1.21.9ubuntu1.patch).
 
 This makes it possible to deal with Ubuntu packages in Debian systems, as Ubuntu switched to ztsd compression, such as when building Ubuntu debootstraps on Debian, managing repos, importing packages and similar operations.
@@ -27,11 +33,8 @@ Backport for bookworm only of trixie's dnscrypt-proxy after [it was left on the 
 ### globalprotect-openconnect
 Debian build of [yuezk's globalprotect-openconnect VPN client](https://github.com/yuezk/GlobalProtect-openconnect)
 
-### hadolint
-[Hadolint](https://github.com/hadolint/hadolint), a linter for Dockerfiles
-
-### docker-compose-v2 and docker-buildx
-Debian port of Ubuntu's packages for [docker-buildx](https://github.com/canonical/docker-buildx) and [docker-compose-v2](https://github.com/canonical/docker-compose-v2) plugins
+### bdinfo
+[bdinfo](https://github.com/schnusch/bdinfo), a tool to get metadata from Blu-Ray discs
 
 ## using this repo
 
