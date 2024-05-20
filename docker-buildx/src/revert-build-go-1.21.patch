@@ -1,0 +1,27 @@
+diff --git a/debian/control b/debian/control
+index c50ef0c..b4bdd5a 100644
+--- a/debian/control
++++ b/debian/control
+@@ -4,7 +4,7 @@ Priority: optional
+ Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+ Build-Depends: debhelper-compat (= 12),
+                dh-golang,
+-               golang-1.21-go
++               golang-go
+ Standards-Version: 4.6.2
+ Homepage: https://github.com/docker/buildx
+ Vcs-Git: https://github.com/canonical/docker-buildx.git
+diff --git a/debian/rules b/debian/rules
+index 83d7b2f..1f2a8cb 100755
+--- a/debian/rules
++++ b/debian/rules
+@@ -15,9 +15,6 @@ export GOCACHE := $(CURDIR)/.gocache
+ # https://blog.golang.org/go116-module-changes (TODO figure out a new solution for Go 1.17+)
+ export GO111MODULE := auto
+ 
+-# Build with Golang 1.21
+-export PATH := /usr/lib/go-1.21/bin:$(PATH)
+-
+ override_dh_gencontrol:
+        echo 'libc:Built-Using=$(shell dpkg-query -f '$${source:Package} (= $${source:Version})' -W libc-dev-bin)' >> debian/docker-buildx.substvars
+        # use "dh_golang" to generate "misc:Built-Using" (via "go list")

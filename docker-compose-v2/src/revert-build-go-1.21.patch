@@ -1,0 +1,27 @@
+diff --git a/debian/control b/debian/control
+index 5d19b09..1db473a 100644
+--- a/debian/control
++++ b/debian/control
+@@ -3,7 +3,7 @@ Section: admin
+ Priority: optional
+ Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+ Build-Depends: debhelper-compat (= 12),
+-               golang-1.21-go
++               golang-go
+ Standards-Version: 4.6.2
+ Homepage: https://github.com/docker/compose
+ Vcs-Git: https://github.com/canonical/docker-compose-v2.git
+diff --git a/debian/rules b/debian/rules
+index 74a94d1..f40cf9c 100755
+--- a/debian/rules
++++ b/debian/rules
+@@ -12,9 +12,6 @@ export GOCACHE := $(CURDIR)/.gocache
+ # https://blog.golang.org/go116-module-changes (TODO figure out a new solution for Go 1.17+)
+ export GO111MODULE := auto
+ 
+-# Build with Golang 1.21
+-export PATH := /usr/lib/go-1.21/bin:$(PATH)
+-
+ override_dh_gencontrol:
+        echo 'libc:Built-Using=$(shell dpkg-query -f '$${source:Package} (= $${source:Version})' -W libc-dev-bin)' >> debian/docker-compose-v2.substvars
+        dh_gencontrol

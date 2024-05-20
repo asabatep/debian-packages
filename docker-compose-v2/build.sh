@@ -17,11 +17,12 @@ EOF
     sed 's/bookworm/trixie/g' /etc/apt/sources.list.d/debian.sources > /etc/apt/sources.list.d/trixie.sources
     apt-get -y update
     apt-get -y upgrade
-    apt-get -t trixie -y install dh-golang golang-go
+    apt-get -t trixie -y install dh-golang golang-go devscripts
+    apt-get -y install dpkg-dev git xmlstarlet
 else
     apt-get -y update
     apt-get -y upgrade
-    apt-get -y install dh-golang golang-go
+    apt-get -y install dh-golang golang-go devscripts dpkg-dev git xmlstarlet
 fi
 
 cd /work/$RELEASE
@@ -31,11 +32,12 @@ FEED=/dev/shm/releases.atom
 apt-get -y install dpkg-dev devscripts git dh-golang golang-go xmlstarlet
 curl -o $FEED https://github.com/canonical/$THISPKG/releases.atom
 
-DVER=$(xmlstarlet sel -t -m "/*[local-name()='feed']/*[local-name()='entry']" -v "*[local-name()='id']" -n $FEED | grep ubuntu | awk -F/ '{print $NF}' )
-UVER=$(xmlstarlet sel -t -m "/*[local-name()='feed']/*[local-name()='entry']" -v "*[local-name()='id']" -n $FEED | grep upstream | awk -F/ '{print $NF}' )
+DVER=$(xmlstarlet sel -t -m "/*[local-name()='feed']/*[local-name()='entry']" -v "*[local-name()='id']" -n $FEED | awk -F/ '{print $NF}' | sort -n | grep ubuntu | tail -n1)
+UVER=$(xmlstarlet sel -t -m "/*[local-name()='feed']/*[local-name()='entry']" -v "*[local-name()='id']" -n $FEED | awk -F/ '{print $NF}' | sort -n | grep -v ubuntu | tail -n1)
 
 git clone --recurse-submodules -b ubuntu/$DVER https://github.com/canonical/$THISPKG
 cd $(find . -maxdepth 1 -mindepth 1 -type d)
+patch -p1 < /src/revert-build-go-1.21.patch
 
 curl -L https://github.com/canonical/$THISPKG/archive/refs/tags/upstream/$UVER.tar.gz -o ../${THISPKG}_${UVER}.orig.tar.gz
 
