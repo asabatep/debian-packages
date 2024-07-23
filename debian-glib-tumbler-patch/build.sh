@@ -52,7 +52,7 @@ fi
 sed -i '0,/^Recommends/{s/^Recommends: /Recommends: lomiri-thumbnailer-service | tumbler, /}' "$cfile"
 
 NAME="repo.lol" EMAIL="pkgs@repo.lol" \
-    faketime @$(expr $(date -d "$(grep -E "^ -- \w+ \w+ <\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b>.*$" ./debian/changelog | head -n1 | awk -F\>\  '{print $NF}' | awk '{print $1, $2, $3, $4}' )" +%s) + 86400) \
+    faketime -f @"$(date '+%Y-%m-%d %H:%M:%S' -d@$(( $(date +%s -d"$(grep "^ -- " debian/changelog|head -n1 |cut -d'>' -f2)") +43200 ))) x0.00001" \
     dch --nmu "apply tumbler patch"
 sed -i s/UNRELEASED/$RELEASE/ ./debian/changelog
 
