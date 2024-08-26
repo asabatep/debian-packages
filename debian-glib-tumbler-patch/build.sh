@@ -29,9 +29,16 @@ if grep -Eqi '(bullseye|jammy)' /etc/os-release ; then
     quilt import -P glib-thumbnailer.patch /src/glib-thumbnailer-legacy.patch
 elif grep -Eqi '(trixie|lunar|mantic|noble)' /etc/os-release ; then
     quilt import -P glib-thumbnailer.patch /src/glib-thumbnailer-lunar.patch
+elif grep -Eqi '(trixie|oracular)' /etc/os-release ; then
+    quilt import -P glib-thumbnailer.patch /src/glib-thumbnailer-trixie.patch
 else
     quilt import -P glib-thumbnailer.patch /src/glib-thumbnailer.patch
 fi
+
+if ! grep ThumbMD5Context gio/glocalfileinfo.c ; then
+    quilt import -P revert-glib-4067.patch /src/revert-glib-4067.patch
+fi
+
 quilt push -a
 
 if grep -qi ubuntu /etc/os-release ; then

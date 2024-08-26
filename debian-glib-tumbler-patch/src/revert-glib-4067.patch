@@ -1,0 +1,17 @@
+diff --git a/gio/glocalfileinfo.c b/gio/glocalfileinfo.c
+index 8d7831fb7..208b69a5f 100644
+--- a/gio/glocalfileinfo.c
++++ b/gio/glocalfileinfo.c
+@@ -103,6 +103,12 @@
+ #include "glibintl.h"
+ 
+ 
++struct ThumbMD5Context {
++	guint32 buf[4];
++	guint32 bits[2];
++	unsigned char in[64];
++};
++
+ #ifndef G_OS_WIN32
+ 
+ typedef struct {
