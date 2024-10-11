@@ -30,12 +30,13 @@ fi
 
 sed -i 's/xvfb-run/true/g' ./debian/rules # xxx
 sed -i 's/debian\/run-tests.sh/true/g' ./debian/rules
+sed -i '/^Package: gtk-update-icon-cache/a Build-Profiles: <!noiconcache>' debian/control
 
 NAME="repo.lol" EMAIL="pkgs@repo.lol" \
     faketime -f @"$(date '+%Y-%m-%d %H:%M:%S' -d@$(( $(date +%s -d"$(grep "^ -- " debian/changelog|head -n1 |cut -d'>' -f2)") +43200 ))) x0.00001" \
     dch --nmu "apply filechooser patch"
 sed -i s/UNRELEASED/$RELEASE/ ./debian/changelog
 
-dpkg-buildpackage --compression=gzip
+DEB_BUILD_PROFILES=noiconcache dpkg-buildpackage --compression=gzip
 mkdir -p /output/$RELEASE
 mv /work/$RELEASE/*deb /output/$RELEASE
