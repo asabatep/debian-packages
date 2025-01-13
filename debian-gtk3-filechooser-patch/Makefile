@@ -15,11 +15,14 @@ sid:
 jammy:
 	DISTRO=ubuntu RELEASE=jammy make build
 
-mantic:
-	DISTRO=ubuntu RELEASE=mantic make build
-
 noble:
 	DISTRO=ubuntu RELEASE=noble make build
+
+oracular:
+	DISTRO=ubuntu RELEASE=oracular make build
+
+plucky:
+	DISTRO=ubuntu RELEASE=plucky make build
 
 installpub:
 	set -eux && \

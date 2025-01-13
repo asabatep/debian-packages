@@ -27,9 +27,9 @@ sed -i '/gio-tests-Add-file-thumbnail-tests.patch/d' debian/patches/series
 
 if grep -Eqi '(bullseye|jammy)' /etc/os-release ; then
     quilt import -P glib-thumbnailer.patch /src/glib-thumbnailer-legacy.patch
-elif grep -Eqi '(trixie|lunar|mantic|noble)' /etc/os-release ; then
+elif grep -Eqi '(lunar|mantic|noble)' /etc/os-release ; then
     quilt import -P glib-thumbnailer.patch /src/glib-thumbnailer-lunar.patch
-elif grep -Eqi '(trixie|oracular)' /etc/os-release ; then
+elif grep -Eqi '(trixie|oracular|plucky)' /etc/os-release ; then
     quilt import -P glib-thumbnailer.patch /src/glib-thumbnailer-trixie.patch
 else
     quilt import -P glib-thumbnailer.patch /src/glib-thumbnailer.patch
