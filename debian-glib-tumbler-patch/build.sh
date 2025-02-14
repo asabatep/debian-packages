@@ -39,7 +39,8 @@ if ! grep ThumbMD5Context gio/glocalfileinfo.c ; then
     quilt import -P revert-glib-4067.patch /src/revert-glib-4067.patch
 fi
 
-quilt push -a
+quilt push -a --fuzz=10
+quilt refresh
 
 if grep -qi ubuntu /etc/os-release ; then
     echo "override_dh_builddeb:" >> debian/rules

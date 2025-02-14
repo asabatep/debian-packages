@@ -21,7 +21,8 @@ apt-get source gtk+3.0
 cd $(find . -maxdepth 1 -mindepth 1 -type d)
 
 quilt import -P gtk3-filechooser-icon-view.patch  /src/gtk3-filechooser-icon-view.patch
-quilt push
+quilt push --fuzz=10
+quilt refresh
 
 if grep -qi ubuntu /etc/os-release ; then
     echo "override_dh_builddeb:" >> debian/rules
